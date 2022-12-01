@@ -13,8 +13,7 @@ namespace MainApp.Data
         {
         }
 
-        public DbSet<Blog> Blog { get; set; }
-
+        public DbSet<Petugas> Petugas { get; set; }
 
     }
 }

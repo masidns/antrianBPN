@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221201155230_blog")]
-    partial class blog
+    [Migration("20221201161742_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,19 +22,39 @@ namespace MainApp.Migrations
                 .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MainApp.Models.Blog", b =>
+            modelBuilder.Entity("MainApp.Models.Petugas", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Alamat")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("JenisKelamin")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nama")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nik")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telepon")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blog");
+                    b.ToTable("Petugas");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
