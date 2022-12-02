@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221202080921_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20221202125258_AntrianPetugas")]
+    partial class AntrianPetugas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +28,15 @@ namespace MainApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LayananId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PetugasId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
@@ -35,6 +44,12 @@ namespace MainApp.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("LayananId");
+
+                    b.HasIndex("PetugasId");
 
                     b.ToTable("Antrians");
                 });
@@ -48,9 +63,6 @@ namespace MainApp.Migrations
                     b.Property<string>("Alamat")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int?>("AntrianId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -73,21 +85,16 @@ namespace MainApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AntrianId");
-
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Loket", b =>
+            modelBuilder.Entity("MainApp.Models.Layanan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AntrianId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NamaLoket")
+                    b.Property<string>("Nama")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -96,11 +103,9 @@ namespace MainApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AntrianId");
-
                     b.HasIndex("PetugasId");
 
-                    b.ToTable("Lokets");
+                    b.ToTable("Layanans");
                 });
 
             modelBuilder.Entity("MainApp.Models.Petugas", b =>
@@ -333,22 +338,30 @@ namespace MainApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MainApp.Models.Client", b =>
+            modelBuilder.Entity("MainApp.Models.Antrian", b =>
                 {
-                    b.HasOne("MainApp.Models.Antrian", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("AntrianId");
+                    b.HasOne("MainApp.Models.Client", null)
+                        .WithMany("Antrians")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("MainApp.Models.Layanan", null)
+                        .WithMany("Antrians")
+                        .HasForeignKey("LayananId");
+
+                    b.HasOne("MainApp.Models.Petugas", "Petugas")
+                        .WithMany()
+                        .HasForeignKey("PetugasId");
+
+                    b.Navigation("Petugas");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Loket", b =>
+            modelBuilder.Entity("MainApp.Models.Layanan", b =>
                 {
-                    b.HasOne("MainApp.Models.Antrian", null)
-                        .WithMany("Lokets")
-                        .HasForeignKey("AntrianId");
-
-                    b.HasOne("MainApp.Models.Petugas", null)
-                        .WithMany("Lokets")
+                    b.HasOne("MainApp.Models.Petugas", "Petugas")
+                        .WithMany()
                         .HasForeignKey("PetugasId");
+
+                    b.Navigation("Petugas");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -402,16 +415,14 @@ namespace MainApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MainApp.Models.Antrian", b =>
+            modelBuilder.Entity("MainApp.Models.Client", b =>
                 {
-                    b.Navigation("Clients");
-
-                    b.Navigation("Lokets");
+                    b.Navigation("Antrians");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Petugas", b =>
+            modelBuilder.Entity("MainApp.Models.Layanan", b =>
                 {
-                    b.Navigation("Lokets");
+                    b.Navigation("Antrians");
                 });
 #pragma warning restore 612, 618
         }

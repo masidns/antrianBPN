@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221202083055_NewInitialCreate")]
-    partial class NewInitialCreate
+    [Migration("20221202124203_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,10 @@ namespace MainApp.Migrations
                     b.Property<int?>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LoketId")
+                    b.Property<int?>("LayananId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PetugasId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Status")
@@ -44,7 +47,9 @@ namespace MainApp.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("LoketId");
+                    b.HasIndex("LayananId");
+
+                    b.HasIndex("PetugasId");
 
                     b.ToTable("Antrians");
                 });
@@ -83,19 +88,19 @@ namespace MainApp.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Loket", b =>
+            modelBuilder.Entity("MainApp.Models.Layanan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("NamaLoket")
+                    b.Property<string>("Nama")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lokets");
+                    b.ToTable("Layanans");
                 });
 
             modelBuilder.Entity("MainApp.Models.Petugas", b =>
@@ -115,9 +120,6 @@ namespace MainApp.Migrations
                     b.Property<int>("JenisKelamin")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LoketId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nama")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -131,8 +133,6 @@ namespace MainApp.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LoketId");
 
                     b.ToTable("Petugas");
                 });
@@ -339,16 +339,13 @@ namespace MainApp.Migrations
                         .WithMany("Antrians")
                         .HasForeignKey("ClientId");
 
-                    b.HasOne("MainApp.Models.Loket", null)
+                    b.HasOne("MainApp.Models.Layanan", null)
                         .WithMany("Antrians")
-                        .HasForeignKey("LoketId");
-                });
+                        .HasForeignKey("LayananId");
 
-            modelBuilder.Entity("MainApp.Models.Petugas", b =>
-                {
-                    b.HasOne("MainApp.Models.Loket", null)
-                        .WithMany("Petugas")
-                        .HasForeignKey("LoketId");
+                    b.HasOne("MainApp.Models.Petugas", null)
+                        .WithMany("Antrians")
+                        .HasForeignKey("PetugasId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -407,11 +404,14 @@ namespace MainApp.Migrations
                     b.Navigation("Antrians");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Loket", b =>
+            modelBuilder.Entity("MainApp.Models.Layanan", b =>
                 {
                     b.Navigation("Antrians");
+                });
 
-                    b.Navigation("Petugas");
+            modelBuilder.Entity("MainApp.Models.Petugas", b =>
+                {
+                    b.Navigation("Antrians");
                 });
 #pragma warning restore 612, 618
         }

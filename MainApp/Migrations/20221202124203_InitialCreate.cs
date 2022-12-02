@@ -16,21 +16,6 @@ namespace MainApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Antrians",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TanggalAntrian = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Antrians", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -85,6 +70,45 @@ namespace MainApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nama = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nik = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Alamat = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Jeniskelamin = table.Column<int>(type: "int", nullable: false),
+                    Telepon = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Layanans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nama = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Layanans", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Petugas",
                 columns: table => new
                 {
@@ -105,36 +129,6 @@ namespace MainApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Petugas", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nama = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Nik = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Alamat = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Jeniskelamin = table.Column<int>(type: "int", nullable: false),
-                    Telepon = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    AntrianId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_Antrians_AntrianId",
-                        column: x => x.AntrianId,
-                        principalTable: "Antrians",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -266,31 +260,52 @@ namespace MainApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Lokets",
+                name: "Antrians",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NamaLoket = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    AntrianId = table.Column<int>(type: "int", nullable: true),
+                    TanggalAntrian = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: true),
+                    LayananId = table.Column<int>(type: "int", nullable: true),
                     PetugasId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lokets", x => x.Id);
+                    table.PrimaryKey("PK_Antrians", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Lokets_Antrians_AntrianId",
-                        column: x => x.AntrianId,
-                        principalTable: "Antrians",
+                        name: "FK_Antrians_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Lokets_Petugas_PetugasId",
+                        name: "FK_Antrians_Layanans_LayananId",
+                        column: x => x.LayananId,
+                        principalTable: "Layanans",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Antrians_Petugas_PetugasId",
                         column: x => x.PetugasId,
                         principalTable: "Petugas",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Antrians_ClientId",
+                table: "Antrians",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Antrians_LayananId",
+                table: "Antrians",
+                column: "LayananId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Antrians_PetugasId",
+                table: "Antrians",
+                column: "PetugasId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -328,26 +343,14 @@ namespace MainApp.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_AntrianId",
-                table: "Clients",
-                column: "AntrianId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lokets_AntrianId",
-                table: "Lokets",
-                column: "AntrianId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lokets_PetugasId",
-                table: "Lokets",
-                column: "PetugasId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Antrians");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -367,19 +370,16 @@ namespace MainApp.Migrations
                 name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "Lokets");
+                name: "Layanans");
+
+            migrationBuilder.DropTable(
+                name: "Petugas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Antrians");
-
-            migrationBuilder.DropTable(
-                name: "Petugas");
         }
     }
 }

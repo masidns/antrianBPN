@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public DateTime TanggalAntrian { get; set; }
         public bool Status { get; set; }
-        
+        public Petugas? Petugas { get; set; }
     }
 }
