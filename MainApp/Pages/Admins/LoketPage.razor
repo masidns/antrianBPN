@@ -1,4 +1,5 @@
 ﻿@page "/admin/loket"
+@inject ApplicationDbContext dbcontext
 <h3>Loket Page</h3>
 
 <a class="btn btn-success" href="/admin/addloket">Tambah Loket</a>
@@ -25,5 +26,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
+
 
 }

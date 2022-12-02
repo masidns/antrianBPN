@@ -4,6 +4,13 @@
 
 <h3>Tambah Loket</h3>
 
+@*@if (model == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{*@
+
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -12,13 +19,21 @@
                     Tambah Loket
                 </div>
                 <div class="card-body">
+                    <form Model="">
+
+                    </form>
                     <div class="row">
                         <div class="col-md-4 align-items-center d-flex">
                             <Label>Layanan</Label>
                         </div>
                         <div class="col-md-8">
-                            <TextBox  style="width: 100%;" Name="npm"> </TextBox>
-                            
+                            <input class="form-control" style="width: 100%;" Name="Nama">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px">
+                            <button class="btn btn-primary">Simpan</button>
+                            <button class="btn btn-secondary" style="margin-left: 10px;">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -30,5 +45,9 @@
 
 
 @code {
+    //[Parameter]
+    //public int Id { get; set; }
+
+    //Layanan model;
 
 }
