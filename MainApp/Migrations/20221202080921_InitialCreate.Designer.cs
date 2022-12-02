@@ -3,6 +3,7 @@ using System;
 using MainApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221202080921_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +28,6 @@ namespace MainApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LoketId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
@@ -38,10 +35,6 @@ namespace MainApp.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("LoketId");
 
                     b.ToTable("Antrians");
                 });
@@ -55,6 +48,9 @@ namespace MainApp.Migrations
                     b.Property<string>("Alamat")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("AntrianId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -77,6 +73,8 @@ namespace MainApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AntrianId");
+
                     b.ToTable("Clients");
                 });
 
@@ -86,11 +84,21 @@ namespace MainApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("AntrianId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NamaLoket")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("PetugasId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AntrianId");
+
+                    b.HasIndex("PetugasId");
 
                     b.ToTable("Lokets");
                 });
@@ -112,9 +120,6 @@ namespace MainApp.Migrations
                     b.Property<int>("JenisKelamin")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LoketId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nama")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -128,8 +133,6 @@ namespace MainApp.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LoketId");
 
                     b.ToTable("Petugas");
                 });
@@ -330,22 +333,22 @@ namespace MainApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MainApp.Models.Antrian", b =>
+            modelBuilder.Entity("MainApp.Models.Client", b =>
                 {
-                    b.HasOne("MainApp.Models.Client", null)
-                        .WithMany("Antrians")
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("MainApp.Models.Loket", null)
-                        .WithMany("Antrians")
-                        .HasForeignKey("LoketId");
+                    b.HasOne("MainApp.Models.Antrian", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("AntrianId");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Petugas", b =>
+            modelBuilder.Entity("MainApp.Models.Loket", b =>
                 {
-                    b.HasOne("MainApp.Models.Loket", null)
-                        .WithMany("Petugas")
-                        .HasForeignKey("LoketId");
+                    b.HasOne("MainApp.Models.Antrian", null)
+                        .WithMany("Lokets")
+                        .HasForeignKey("AntrianId");
+
+                    b.HasOne("MainApp.Models.Petugas", null)
+                        .WithMany("Lokets")
+                        .HasForeignKey("PetugasId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -399,16 +402,16 @@ namespace MainApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MainApp.Models.Client", b =>
+            modelBuilder.Entity("MainApp.Models.Antrian", b =>
                 {
-                    b.Navigation("Antrians");
+                    b.Navigation("Clients");
+
+                    b.Navigation("Lokets");
                 });
 
-            modelBuilder.Entity("MainApp.Models.Loket", b =>
+            modelBuilder.Entity("MainApp.Models.Petugas", b =>
                 {
-                    b.Navigation("Antrians");
-
-                    b.Navigation("Petugas");
+                    b.Navigation("Lokets");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221201161742_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20221202083055_NewInitialCreate")]
+    partial class NewInitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,82 @@ namespace MainApp.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("MainApp.Models.Antrian", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LoketId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("TanggalAntrian")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("LoketId");
+
+                    b.ToTable("Antrians");
+                });
+
+            modelBuilder.Entity("MainApp.Models.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Alamat")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Jeniskelamin")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nama")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nik")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telepon")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("MainApp.Models.Loket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("NamaLoket")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Lokets");
+                });
 
             modelBuilder.Entity("MainApp.Models.Petugas", b =>
                 {
@@ -36,9 +112,11 @@ namespace MainApp.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("JenisKelamin")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("JenisKelamin")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LoketId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nama")
                         .IsRequired()
@@ -53,6 +131,8 @@ namespace MainApp.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LoketId");
 
                     b.ToTable("Petugas");
                 });
@@ -253,6 +333,24 @@ namespace MainApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MainApp.Models.Antrian", b =>
+                {
+                    b.HasOne("MainApp.Models.Client", null)
+                        .WithMany("Antrians")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("MainApp.Models.Loket", null)
+                        .WithMany("Antrians")
+                        .HasForeignKey("LoketId");
+                });
+
+            modelBuilder.Entity("MainApp.Models.Petugas", b =>
+                {
+                    b.HasOne("MainApp.Models.Loket", null)
+                        .WithMany("Petugas")
+                        .HasForeignKey("LoketId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -302,6 +400,18 @@ namespace MainApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MainApp.Models.Client", b =>
+                {
+                    b.Navigation("Antrians");
+                });
+
+            modelBuilder.Entity("MainApp.Models.Loket", b =>
+                {
+                    b.Navigation("Antrians");
+
+                    b.Navigation("Petugas");
                 });
 #pragma warning restore 612, 618
         }
