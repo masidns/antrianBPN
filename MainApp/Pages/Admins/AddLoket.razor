@@ -1,5 +1,11 @@
 ﻿@page "/admin/add-loket"
 @*@inject ApplicationDbContext dbcontext*@
+@using System.Text.RegularExpressions
+@using Microsoft.EntityFrameworkCore
+
+@*@inject ApplicationDbContext dbcontext*@
+@inject NotificationService NotificationService
+@inject NavigationManager nav
 @inject NavigationManager nav
 
 <PageTitle>Tambah Loket</PageTitle>
@@ -11,7 +17,7 @@
 {
     <p><em>Loading...</em></p>
 }
-else
+else{
 {*@
 
 <div class="container-fluid">
@@ -43,12 +49,25 @@ else
 
 
 @code {
-    //[Parameter]
-    //public int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
     //Layanan model;
 
+    //protected override Task OnInitializedAsync()
+    //{
 
+    //    if (Id <= 0)
+    //    {
+    //        model = new Layanan();
+    //    }
+    //    else
+    //    {
+    //        model = dbcontext.Layanan.SingleOrDefault(x => x.Id == Id);
+    //    }
+
+    //    return base.OnInitializedAsync();
+    //}
 
     void Cancel()
     {
