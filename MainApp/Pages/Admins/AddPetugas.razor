@@ -1,0 +1,84 @@
+﻿@page "/admin/addpetugas"
+@inject NavigationManager nav
+
+<PageTitle>Tambah Petugas</PageTitle>
+
+@*<h3>AddPetugas</h3>*@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <Radzen.Blazor.RadzenFieldset Text="Tambah Data Petugas">
+                <Radzen.Blazor.RadzenCard>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="NIK" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="Nik" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Nama" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="Nama" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Alamat" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="Alamat" />
+                        </div>
+                    </div> 
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Telepon" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="Telepon" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="JenisKelamin" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="JenisKelamin" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Email" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox style="width: 100%;" Name="Email" />
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                         <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                     </div>
+                </Radzen.Blazor.RadzenCard>
+            </Radzen.Blazor.RadzenFieldset>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+
+
+
+    void Cancel()
+    {
+        nav.NavigateTo("admin/petugas");
+    }
+}

@@ -1,0 +1,27 @@
+﻿@page "/admin/petugas"
+@inject NavigationManager nav
+
+<PageTitle>Petugas</PageTitle>
+
+@*<h3>PagePetugas</h3>*@
+
+<div class="container-fluid">
+            <RadzenFieldset Text="Data Petugas">
+                <RadzenCard>
+                    <div class="row">
+                        <div class="col">
+                            <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/addpetugas"))"></RadzenButton>
+                        </div>
+                    </div>
+                </RadzenCard>
+            </RadzenFieldset>
+    <div class="row">
+        <div class="col">
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+}
