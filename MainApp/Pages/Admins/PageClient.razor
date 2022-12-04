@@ -1,22 +1,21 @@
-﻿@page "/admin/petugas"
+﻿@page "/admin/client"
 @inject NavigationManager nav
+<PageTitle>Client</PageTitle>
 
-<PageTitle>Petugas</PageTitle>
+<h3>PageClient</h3>
 
-@*<h3>PagePetugas</h3>*@
 
 <div class="container-fluid">
-    <RadzenFieldset Text="Data Petugas">
+    <RadzenFieldset Text="Data Client">
         <RadzenCard>
             <div class="row">
                 <div class="col">
-                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-petugas"))"></RadzenButton>
+                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-client"))"></RadzenButton>
                 </div>
             </div>
         </RadzenCard>
     </RadzenFieldset>
 </div>
-
 
 @code {
 
