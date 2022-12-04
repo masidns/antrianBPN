@@ -1,10 +1,36 @@
 ﻿@page "/admin/loket"
-@inject ApplicationDbContext dbcontext
-<h3>Loket Page</h3>
+@inject NavigationManager nav
 
-<a class="btn btn-success" href="/admin/addloket">Tambah Loket</a>
+<PageTitle>Loket</PageTitle>
 
-<div>
+
+@*<h3>Loket Page</h3> *@
+
+    @* <RadzenCard class="pb-7">
+            <div class="row">
+
+            <div class="col-6">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Loket Pelayanan</RadzenText>
+            </div>
+        <div class="col-6" style="display:flex; justify-content:space-between">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default Radzen BreadCrumb</RadzenText>
+            <RadzenBreadCrumb Style="text-align:right">
+                <RadzenBreadCrumbItem Path="/" Text="Components" />
+                <RadzenBreadCrumbItem Path="/badge" Text="Badge" />
+                <RadzenBreadCrumbItem Icon="add" Text="Add" />
+            </RadzenBreadCrumb>
+            </div>
+        </div>
+    </RadzenCard>*@
+
+
+
+<div class="container-fluid">
+    <RadzenFieldset Text="Data Loket">
+    <RadzenCard>
+            <RadzenButton Click="@(()=> nav.NavigateTo($"/admin/addloket"))" Icon="add"/>
+    @*<a class="btn btn-success" href="/admin/addloket">Tambah</a>*@
+
     <div class="col">
         <table class="table">
             <thead>
@@ -23,6 +49,8 @@
             </tbody>
         </table>
     </div>
+    </RadzenCard>
+    </RadzenFieldset>
 </div>
 
 @code {

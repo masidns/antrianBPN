@@ -1,8 +1,11 @@
 ﻿@page "/admin/addloket"
+@*@inject ApplicationDbContext dbcontext*@
+@inject NavigationManager nav
+
 <PageTitle>Tambah Loket</PageTitle>
 
 
-<h3>Tambah Loket</h3>
+@*<h3>Tambah Loket</h3>*@
 
 @*@if (model == null)
 {
@@ -14,30 +17,25 @@ else
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    Tambah Loket
-                </div>
-                <div class="card-body">
-                    <form Model="">
-
-                    </form>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <Label>Layanan</Label>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="form-control" style="width: 100%;" Name="Nama">
-                        </div>
+           <RadzenFieldset Text="Tambah Data Loket">
+            <RadzenCard>
+               <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Nama Loket / Pelayanan" />
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px">
-                            <button class="btn btn-primary">Simpan</button>
-                            <button class="btn btn-secondary" style="margin-left: 10px;">Cancel</button>
-                        </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" Name="Nama" />
                     </div>
                 </div>
-            </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                        @*<RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />*@
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Clickk="@Cancel" />
+                    </div>
+                 </div>
+            </RadzenCard>
+           </RadzenFieldset>
         </div>
     </div>
 </div>
@@ -50,4 +48,10 @@ else
 
     //Layanan model;
 
+
+
+    void Cancel()
+    {
+        nav.NavigateTo("/admin/loket");
+    }
 }
