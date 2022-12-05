@@ -267,9 +267,9 @@ namespace MainApp.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TanggalAntrian = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PetugasId = table.Column<int>(type: "int", nullable: true),
                     ClientId = table.Column<int>(type: "int", nullable: true),
-                    LayananId = table.Column<int>(type: "int", nullable: true),
-                    PetugasId = table.Column<int>(type: "int", nullable: true)
+                    LayananId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

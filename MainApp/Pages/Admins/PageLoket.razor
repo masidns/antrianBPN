@@ -1,61 +1,61 @@
 ﻿@page "/admin/loket"
+@using System.Linq.Dynamic.Core
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
 <PageTitle>Loket</PageTitle>
 
 
-@*<h3>Loket Page</h3> *@
-
-    @* <RadzenCard class="pb-7">
-            <div class="row">
-
-            <div class="col-6">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Loket Pelayanan</RadzenText>
-            </div>
-        <div class="col-6" style="display:flex; justify-content:space-between">
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default Radzen BreadCrumb</RadzenText>
-            <RadzenBreadCrumb Style="text-align:right">
-                <RadzenBreadCrumbItem Path="/" Text="Components" />
-                <RadzenBreadCrumbItem Path="/badge" Text="Badge" />
-                <RadzenBreadCrumbItem Icon="add" Text="Add" />
-            </RadzenBreadCrumb>
-            </div>
-        </div>
-    </RadzenCard>*@
-
-
-
 <div class="container-fluid">
     <RadzenFieldset Text="Data Loket">
     <RadzenCard>
-            <RadzenButton Click="@(()=> nav.NavigateTo($"/admin/add-loket"))" Icon="add"/>
-    @*<a class="btn btn-success" href="/admin/addloket">Tambah</a>*@
-
-    <div class="col">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Loket</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>No</td>
-                    <td>Loket</td>
-                    <td>Loket</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="row">
+            <div class="col">
+                <RadzenButton Click="@(()=> nav.NavigateTo($"/admin/add-loket/0"))" Icon="add" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Layanan"
+                                    AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                        <Columns>
+                            @*<RadzenDataGridColumn TItem="Layanan" Title="ID" Property="Id" />*@
+                            <RadzenDataGridColumn TItem="Layanan" Title="Nama" Property="Nama" />
+                            <RadzenDataGridColumn TItem="Layanan" Title="Action">
+                                <Template Context="item">
+                                    @*<RadzenButton Click="@(()=> nav.NavigateTo($"/admin/adddosen/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small"></RadzenButton>
+                                    <RadzenButton Click="@(()=>Delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"></RadzenButton>*@
+                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-loket/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"/>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+            </div>
+        </div>
     </RadzenCard>
     </RadzenFieldset>
 </div>
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    public ICollection<Layanan> data { get; set; }
+    public ICollection<Layanan> datasource { get; set; }
+    RadzenDataGrid<Layanan> grid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        datasource = dbcontext.Layanans.ToList();
+        data = datasource;
+        await base.OnInitializedAsync();
+    }
+
+    async Task delete(Layanan model)
+    {
+        dbcontext.Layanans.Remove(model);
+        data.Remove(model);
+        await dbcontext.SaveChangesAsync();
+        await grid.Reload();
+    }
 
 
 }
