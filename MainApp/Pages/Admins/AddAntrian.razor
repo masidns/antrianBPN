@@ -1,12 +1,16 @@
-﻿@page "/admin/add-antrian"
+﻿@page "/admin/add-antrian/{Id:int}"
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
 <PageTitle>>Tambah Antrian</PageTitle>
 
-<h3>AddAntrian</h3>
+@if(model <= 0)
+{
+
+}
 
 <div class="container-fluid">
-    <RadzenFieldset Text="Tambah data antrian">
+    <RadzenFieldset Text="Tambah antrian">
         <RadzenCard>
             <div class="row">
                 <div class="col">
@@ -18,5 +22,22 @@
 </div>
 
 @code {
+    //[Parameter]
+    //public int Id { get; set; }
+
+    //Antrian model;
+
+    //protected override Task OnInitializedAsync()
+    //{
+    //    if (Id <= 0)
+    //    {
+    //        model = new Client();
+    //    }
+    //    else
+    //    {
+    //        model = dbcontext.Clients.SingleOrDefault(x => x.Id == Id);
+    //    }
+    //    return base.OnInitializedAsync();
+    //}
 
 }
