@@ -4,6 +4,7 @@
 @using System.Text.Json
 @using System.Text
 @using System.Text.Encodings.Web
+@using Radzen
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
@@ -60,7 +61,7 @@ else
                                     <Radzen.Blazor.RadzenLabel Text="JenisKelamin" />
                                 </div>
                                 <div class="col-md-8">
-                                    @*<RadzenDropDown Style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />*@
+                                    <RadzenDropDown Style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />
                                 </div>
                             </div>
                             <div class="row m-1">
