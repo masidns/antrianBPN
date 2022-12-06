@@ -72,6 +72,7 @@ else{
         if(model.Id <= 0){
             dbcontext.Layanans.Add(model);
             await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
         }
         else
         {
