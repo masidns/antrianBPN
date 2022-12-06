@@ -4,7 +4,7 @@
 
 <PageTitle>>Tambah Antrian</PageTitle>
 
-@if(model <= 0)
+@if(antrian == null)
 {
 
 }
@@ -12,32 +12,70 @@
 <div class="container-fluid">
     <RadzenFieldset Text="Tambah antrian">
         <RadzenCard>
-            <div class="row">
-                <div class="col">
-
+            <RadzenTemplateForm Data="@antrian" Submit="@(async (Antrian args)=>{await Submit(args);})">
+                <div class="row m-1">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Client" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenDropDown @bind-Value="Antrian.Client" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />
+                    </div>
                 </div>
-            </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                    </div>
+                </div>
+            </RadzenTemplateForm>
         </RadzenCard>
     </RadzenFieldset>
 </div>
 
 @code {
-    //[Parameter]
-    //public int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
     //Antrian model;
+    Antrian antrian = new Antrian();
 
-    //protected override Task OnInitializedAsync()
-    //{
-    //    if (Id <= 0)
-    //    {
-    //        model = new Client();
-    //    }
-    //    else
-    //    {
-    //        model = dbcontext.Clients.SingleOrDefault(x => x.Id == Id);
-    //    }
-    //    return base.OnInitializedAsync();
-    //}
+    ICollection<Client> Clients;
+
+    protected override Task OnInitializedAsync()
+    {
+        Clients = dbcontext.Clients.ToList();
+        if (Id <= 0)
+        {
+            antrian = new Antrian();
+        }
+        else
+        {
+            antrian = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
+        }
+        return base.OnInitializedAsync();
+    }
+
+    async Task Submit(Antrian model)
+    {
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        if(Id <= 0)
+        {
+            dbcontext.Antrians.Add(model);
+            await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
+        }
+        else
+        {
+            dbcontext.SaveChanges();
+            await trans.CommitAsync();
+        }
+        nav.NavigateTo("admin/antrian");
+
+    }
+
+    void Cancel()
+    {
+        nav.NavigateTo("admin/antrian");
+    }
 
 }
