@@ -14,7 +14,7 @@
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-petugas/0"))"></RadzenButton>
                 </div>
             </div>
-            <div class="row mt-1">
+            <div class="row mt-3">
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Petugas" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
@@ -25,6 +25,12 @@
                             @*<RadzenDataGridColumn TItem="Petugas" Title="Nama Petugas" Property="JenisKelamin" />*@
                             @*<RadzenDataGridColumn TItem="Petugas" Title="Jenis Kelamin" Property="JenisKelamin" />*@
                             <RadzenDataGridColumn TItem="Petugas" Title="Email" Property="Email" />
+                            <RadzenDataGridColumn TItem="Petugas" Title="Action">
+                                <Template Context="item">
+                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-petugas/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=>Delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"/>
+                                </Template>
+                             </RadzenDataGridColumn>
                         </Columns>
                     </RadzenDataGrid>
                 </div>
@@ -44,6 +50,14 @@
         datasource = dbcontext.Petugas.ToList();
         data = datasource;
         await base.OnInitializedAsync();
+    }
+
+    async Task Delete(Petugas model)
+    {
+        dbcontext.Petugas.Remove(model);
+        data.Remove(model);
+        await dbcontext.SaveChangesAsync();
+        await grid.Reload();
     }
 
 }
