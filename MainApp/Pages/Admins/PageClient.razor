@@ -1,8 +1,7 @@
 ﻿@page "/admin/client"
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 <PageTitle>Client</PageTitle>
-
-<h3>PageClient</h3>
 
 
 <div class="container-fluid">
@@ -10,7 +9,28 @@
         <RadzenCard>
             <div class="row">
                 <div class="col">
-                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-client"))"></RadzenButton>
+                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-client/0"))"></RadzenButton>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Client" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Client" Title="Nama Client" Property="Nama" />
+                            <RadzenDataGridColumn TItem="Client" Title="NIK" Property="Nik" />
+                            <RadzenDataGridColumn TItem="Client" Title="Alamat" Property="Alamat" />
+                            <RadzenDataGridColumn TItem="Client" Title="Telepon" Property="Telepon" />
+                            @*<RadzenDataGridColumn TItem="Client" Title="Nama Client" Property="JenisKelamin" />*@
+                            @*<RadzenDataGridColumn TItem="Client" Title="Jenis Kelamin" Property="JenisKelamin" />*@
+                            <RadzenDataGridColumn TItem="Client" Title="Email" Property="Email" />
+                            <RadzenDataGridColumn TItem="Client" Title="Action">
+                                <Template Context="item">
+                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-client/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
                 </div>
             </div>
         </RadzenCard>
@@ -18,5 +38,22 @@
 </div>
 
 @code {
+    public ICollection<Client> data { get; set; }
+    public ICollection<Client> datasource { get; set; }
+    RadzenDataGrid<Client> grid;
 
+    protected override Task OnInitializedAsync()
+    {
+        datasource = dbcontext.Clients.ToList();
+        data = datasource;
+        return base.OnInitializedAsync();
+    }
+
+    async Task delete(Client model)
+    {
+        dbcontext.Clients.Remove(model);
+        data.Remove(model);
+        await dbcontext.SaveChangesAsync();
+        await grid.Reload();
+    }
 }

@@ -1,77 +1,118 @@
-﻿@page "/admin/add-client"
-@*@inject ApplicationDbContext dbcontext*@
+﻿@page "/admin/add-client/{Id:int}"
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
 
 <PageTitle>Tambah Client</PageTitle>
-<h3>AddClient</h3>
 
-<div class="container-fluid">
-    <Radzen.Blazor.RadzenFieldset Text="Tambah Data Petugas">
-        <Radzen.Blazor.RadzenCard>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="NIK" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="Nik" />
-                </div>
-            </div>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="Nama" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="Nama" />
-                </div>
-            </div>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="Alamat" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="Alamat" />
-                </div>
-            </div>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="Telepon" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="Telepon" />
-                </div>
-            </div>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="JenisKelamin" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="JenisKelamin" />
-                </div>
-            </div>
-            <div class="row m-1">
-                <div class="col-md-4">
-                    <Radzen.Blazor.RadzenLabel Text="Email" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenTextBox style="width: 100%;" Name="Email" />
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
-                </div>
-            </div>
-        </Radzen.Blazor.RadzenCard>
-    </Radzen.Blazor.RadzenFieldset>
-</div>
+@if (model == null )
+{
+    <p><em>.....</em></p>
+}
+else
+{
+    <div class="container-fluid">
+        <RadzenTemplateForm Data="@model" Submit="@(async (Client args) => {await Submit (args);})">
+            <Radzen.Blazor.RadzenFieldset Text="Tambah Data Client">
+                <Radzen.Blazor.RadzenCard>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="NIK" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="model.Nik" style="width: 100%;" Name="Nik" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Nama" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Alamat" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="model.Alamat" style="width: 100%;" Name="Alamat" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Telepon" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="model.Telepon" style="width: 100%;" Name="Telepon" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="JenisKelamin" />
+                        </div>
+                        <div class="col-md-8">
+                            @*<RadzenDropDown @bind-Value="model.Jeniskelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />*@
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <Radzen.Blazor.RadzenLabel Text="Email" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="model.Email" style="width: 100%;" Name="Email" />
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                    </div>
+                </Radzen.Blazor.RadzenCard>
+            </Radzen.Blazor.RadzenFieldset>
+        </RadzenTemplateForm>
+    </div>
+}
+
+
+
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    //Loket model;
+    Client model;
+
+    protected override Task OnInitializedAsync()
+    {
+        if(Id <= 0)
+        {
+            model = new Client();
+        }
+        else
+        {
+            model = dbcontext.Clients.SingleOrDefault(x => x.Id == Id);
+        }
+        return base.OnInitializedAsync();
+    }
+
+    async Task Submit(Client model)
+    {
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        if(model.Id <= 0)
+        {
+            dbcontext.Clients.Add(model);
+            await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
+        }
+        else
+        {
+            dbcontext.SaveChanges();
+            await trans.CommitAsync();
+        }
+        nav.NavigateTo("admin/client");
+    }
 
     void Cancel()
     {
