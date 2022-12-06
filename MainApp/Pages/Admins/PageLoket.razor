@@ -23,8 +23,6 @@
                             <RadzenDataGridColumn TItem="Layanan" Title="Nama" Property="Nama" />
                             <RadzenDataGridColumn TItem="Layanan" Title="Action">
                                 <Template Context="item">
-                                    @*<RadzenButton Click="@(()=> nav.NavigateTo($"/admin/adddosen/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small"></RadzenButton>
-                                    <RadzenButton Click="@(()=>Delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"></RadzenButton>*@
                                     <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-loket/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
                                     <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"/>
                                 </Template>

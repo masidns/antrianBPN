@@ -1,4 +1,5 @@
 ﻿@page "/admin/petugas"
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
 <PageTitle>Petugas</PageTitle>
@@ -10,7 +11,22 @@
         <RadzenCard>
             <div class="row">
                 <div class="col">
-                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-petugas"))"></RadzenButton>
+                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"admin/add-petugas/0"))"></RadzenButton>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col">
+                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Petugas" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Petugas" Title="Nama Petugas" Property="Nama" />
+                            <RadzenDataGridColumn TItem="Petugas" Title="NIK" Property="Nik" />
+                            <RadzenDataGridColumn TItem="Petugas" Title="Alamat" Property="Alamat" />
+                            <RadzenDataGridColumn TItem="Petugas" Title="Telepon" Property="Telepon" />
+                            @*<RadzenDataGridColumn TItem="Petugas" Title="Nama Petugas" Property="JenisKelamin" />*@
+                            @*<RadzenDataGridColumn TItem="Petugas" Title="Jenis Kelamin" Property="JenisKelamin" />*@
+                            <RadzenDataGridColumn TItem="Petugas" Title="Email" Property="Email" />
+                        </Columns>
+                    </RadzenDataGrid>
                 </div>
             </div>
         </RadzenCard>
@@ -19,5 +35,15 @@
 
 
 @code {
+    public ICollection<Petugas> data { get; set; }
+    public ICollection<Petugas> datasource { get; set; }
+    RadzenDataGrid<Petugas> grid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        datasource = dbcontext.Petugas.ToList();
+        data = datasource;
+        await base.OnInitializedAsync();
+    }
 
 }
