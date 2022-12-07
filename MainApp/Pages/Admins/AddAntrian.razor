@@ -18,7 +18,7 @@
                         <RadzenLabel Text="Client" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenDropDown @bind-Value="Antrian.Client" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />
+                        @*<RadzenDropDown @bind-Value="Antrian.Client" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
                     </div>
                 </div>
                 <div class="row justify-content-center">
@@ -39,11 +39,11 @@
     //Antrian model;
     Antrian antrian = new Antrian();
 
-    ICollection<Client> Clients;
+    //ICollection<Client> Clients;
 
     protected override Task OnInitializedAsync()
     {
-        Clients = dbcontext.Clients.ToList();
+        //Clients = dbcontext.Clients.ToList();
         if (Id <= 0)
         {
             antrian = new Antrian();
