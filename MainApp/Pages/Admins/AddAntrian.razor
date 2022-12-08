@@ -2,58 +2,83 @@
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
-<PageTitle>>Tambah Antrian</PageTitle>
+<PageTitle>Tambah Antrian</PageTitle>
 
 @if(antrian == null)
 {
-
+    <p><em>Loading...</em></p>
+}
+else 
+{
+    <div class="container-fluid">
+        <RadzenFieldset Text="Tambah antrian">
+            <RadzenCard>
+                <RadzenTemplateForm Data="@antrian" Submit="@(async (Antrian args)=>{await Submit(args);})">
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Client" />
+                        </div>
+                        <div class="col-md-8">
+                            @*<RadzenDropDown @bind-Value="antrian.Clients" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
+                            <RadzenDropDown Style="width:100%" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client"></RadzenDropDown>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                    </div>
+                </RadzenTemplateForm>
+            </RadzenCard>
+        </RadzenFieldset>
+    </div>
 }
 
-<div class="container-fluid">
-    <RadzenFieldset Text="Tambah antrian">
-        <RadzenCard>
-            <RadzenTemplateForm Data="@antrian" Submit="@(async (Antrian args)=>{await Submit(args);})">
-                <div class="row m-1">
-                    <div class="col-md-4">
-                        <RadzenLabel Text="Client" />
-                    </div>
-                    <div class="col-md-8">
-                        @*<RadzenDropDown @bind-Value="Antrian.Client" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
-                    </div>
-                </div>  
-                <div class="row justify-content-center">
-                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
-                    </div>
-                </div>
-            </RadzenTemplateForm>
-        </RadzenCard>
-    </RadzenFieldset>
-</div>
+
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
     //Antrian model;
-    Antrian antrian = new Antrian();
+    ICollection<Client> Clients;
 
-    //ICollection<Client> Clients;
+    Antrian antrian;
 
     protected override Task OnInitializedAsync()
     {
-        //Clients = dbcontext.Clients.ToList();
+        Clients = dbcontext.Clients.ToList();
+
         if (Id <= 0)
         {
             antrian = new Antrian();
         }
         else
         {
-            antrian = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
+            //antrian = (Antrian)antrianid;
+            //notPublish = true;
+
+                //antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
         }
+
+
         return base.OnInitializedAsync();
     }
+
+    //protected override Task OnInitializedAsync()
+    //{
+    //    Clients = dbcontext.Clients.ToList();
+    //    if (Id <= 0)
+    //    {
+    //        antrian = new Antrian();
+    //    }
+    //    else
+    //    {
+    //        antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
+    //    }
+    //    return base.OnInitializedAsync();
+    //}
 
     async Task Submit(Antrian model)
     {
