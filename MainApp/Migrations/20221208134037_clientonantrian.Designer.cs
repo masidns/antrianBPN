@@ -3,6 +3,7 @@ using System;
 using MainApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221208134037_clientonantrian")]
+    partial class clientonantrian
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +28,7 @@ namespace MainApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LayananId")
+                    b.Property<int?>("LayananId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PetugasId")
@@ -40,13 +40,16 @@ namespace MainApp.Migrations
                     b.Property<DateTime>("TanggalAntrian")
                         .HasColumnType("datetime(6)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("clientId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ClientId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LayananId");
 
                     b.HasIndex("PetugasId");
+
+                    b.HasIndex("clientId");
 
                     b.ToTable("Antrians");
                 });
@@ -332,27 +335,23 @@ namespace MainApp.Migrations
 
             modelBuilder.Entity("MainApp.Models.Antrian", b =>
                 {
-                    b.HasOne("MainApp.Models.Client", "Client")
+                    b.HasOne("MainApp.Models.Layanan", null)
                         .WithMany("Antrians")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MainApp.Models.Layanan", "Layanan")
-                        .WithMany("Antrians")
-                        .HasForeignKey("LayananId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LayananId");
 
                     b.HasOne("MainApp.Models.Petugas", "Petugas")
                         .WithMany()
                         .HasForeignKey("PetugasId");
 
-                    b.Navigation("Client");
-
-                    b.Navigation("Layanan");
+                    b.HasOne("MainApp.Models.Client", "client")
+                        .WithMany("Antrians")
+                        .HasForeignKey("clientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Petugas");
+
+                    b.Navigation("client");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

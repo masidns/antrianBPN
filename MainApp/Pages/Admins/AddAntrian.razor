@@ -1,4 +1,6 @@
 ﻿@page "/admin/add-antrian/{Id:int}"
+@using System.Text.RegularExpressions
+@using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
@@ -20,7 +22,16 @@ else
                         </div>
                         <div class="col-md-8">
                             @*<RadzenDropDown @bind-Value="antrian.Clients" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
-                            <RadzenDropDown Style="width:100%" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client"></RadzenDropDown>
+                            <RadzenDropDown @bind-Value="antrian.Client" Style="width:100%" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Loket" />
+                        </div>
+                        <div class="col-md-8">
+                            @*<RadzenDropDown @bind-Value="antrian.Clients" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
+                            <RadzenDropDown @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
@@ -43,12 +54,16 @@ else
 
     //Antrian model;
     ICollection<Client> Clients;
+    ICollection<Layanan> Layanans;
 
-    Antrian antrian;
+    Client client = new();
+    Antrian antrian = new();
+    //Antrian antrian = new();
 
     protected override Task OnInitializedAsync()
     {
         Clients = dbcontext.Clients.ToList();
+        Layanans = dbcontext.Layanans.ToList();
 
         if (Id <= 0)
         {
@@ -59,7 +74,7 @@ else
             //antrian = (Antrian)antrianid;
             //notPublish = true;
 
-                //antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
+            antrian = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
         }
 
 
@@ -82,8 +97,9 @@ else
 
     async Task Submit(Antrian model)
     {
+        //model.Client = client.Antrian ;
         var trans = await dbcontext.Database.BeginTransactionAsync();
-        if(Id <= 0)
+        if(model.Id <= 0)
         {
             dbcontext.Antrians.Add(model);
             await dbcontext.SaveChangesAsync();

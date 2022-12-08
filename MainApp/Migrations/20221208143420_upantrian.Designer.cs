@@ -3,6 +3,7 @@ using System;
 using MainApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221208143420_upantrian")]
+    partial class upantrian
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,7 +31,7 @@ namespace MainApp.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LayananId")
+                    b.Property<int?>("LayananId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PetugasId")
@@ -338,19 +341,15 @@ namespace MainApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MainApp.Models.Layanan", "Layanan")
+                    b.HasOne("MainApp.Models.Layanan", null)
                         .WithMany("Antrians")
-                        .HasForeignKey("LayananId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LayananId");
 
                     b.HasOne("MainApp.Models.Petugas", "Petugas")
                         .WithMany()
                         .HasForeignKey("PetugasId");
 
                     b.Navigation("Client");
-
-                    b.Navigation("Layanan");
 
                     b.Navigation("Petugas");
                 });

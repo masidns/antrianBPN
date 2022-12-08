@@ -1,8 +1,9 @@
 ﻿@page "/admin/antrian"
+@using Microsoft.EntityFrameworkCore;
+@inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
 <PageTitle>Antrian</PageTitle>
-<h3>PageAntrian</h3>
 
 <div class="container-fluid">
     <RadzenFieldset Text="Daftar Antrian">
@@ -12,10 +13,65 @@
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
                 </div>
             </div>
+            <div class="row mt-1">
+                <div class="col">
+                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="TanggalAntrian"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Status"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Action">
+                                <Template Context="item">
+                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid> 
+                </div>
+            </div>
         </RadzenCard>
     </RadzenFieldset>
 </div>
 
 @code {
+    public ICollection<Antrian> data { get; set; }
+    public ICollection<Antrian> datasource { get; set; } = new List<Antrian>();
+
+    RadzenDataGrid<Antrian> grid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var datasourcetemp = new List<Antrian>();
+
+        foreach (var item in dbcontext.Antrians.Include(x => x.Layanan))
+        {
+            datasourcetemp.Add(new Antrian
+                {
+                    Layanan = item.Layanan,
+                    Id = item.Id,
+                });
+        }       
+        foreach (var item in dbcontext.Antrians.Include(x => x.Client))
+        {
+            datasourcetemp.Add(new Antrian
+                {
+                    Client = item.Client,
+                    Id = item.Id,
+                });
+        }
+        datasource = dbcontext.Antrians.ToList();
+        data = datasource;
+        await base.OnInitializedAsync();
+    }
+
+    async Task delete(Antrian model)
+    {
+        dbcontext.Antrians.Remove(model);
+        data.Remove(model);
+        await dbcontext.SaveChangesAsync();
+        await grid.Reload();
+    }
 
 }
