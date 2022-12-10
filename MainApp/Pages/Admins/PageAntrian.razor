@@ -13,14 +13,14 @@
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
                 </div>
             </div>
-            <div class="row mt-1">
+            <div class="row mt-3">
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama"/>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="TanggalAntrian"/>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Status"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Status" Property="Status"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Action">
                                 <Template Context="item">
                                     <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
