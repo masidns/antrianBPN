@@ -5,6 +5,8 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Radzen
+
+
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
@@ -113,7 +115,14 @@ else
     {
         var trans = await dbcontext.Database.BeginTransactionAsync();
         if(model.Id <= 0)
-        {
+        {   
+            //Create User and add user id 
+
+            //add role Petugas to User 
+
+
+            //create petugas and Add User iD to petugas
+
             dbcontext.Petugas.Add(model);
             await dbcontext.SaveChangesAsync();
             await trans.CommitAsync();

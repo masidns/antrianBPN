@@ -9,6 +9,7 @@
         public Gender JenisKelamin{ get; set; }
         public string Telepon { get; set; }
         public string Email { get; set; }
+        public string UserId { get; set; }
         public ICollection<Antrian> Antrians { get; set; }  
     }
 }

@@ -28,6 +28,36 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext =scope.ServiceProvider.GetService<ApplicationDbContext>();
+    var usermanager=scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+    if (!dbContext.Roles.Any())
+    {
+        dbContext.Roles.Add(new IdentityRole("Admin"));
+        dbContext.Roles.Add(new IdentityRole("Petugas"));
+        dbContext.Roles.Add(new IdentityRole("Client"));
+        dbContext.SaveChanges();
+
+        //var user = new IdentityUser() { Email = "", UserName = "", };
+        //var resutl = usermanager.CreateAsync(user,"1234").Result;
+        //if (resutl.Succeeded)
+        //{
+        //    usermanager.AddToRoleAsync(user, "Petugas");
+        //   //Create Petugas
+
+        //    //user.Id
+        //}
+
+    }
+
+
+}
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

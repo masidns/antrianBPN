@@ -1,5 +1,8 @@
 ﻿@page "/admin/loket"
 @using System.Linq.Dynamic.Core
+
+
+@attribute [Authorize]
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
