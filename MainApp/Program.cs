@@ -19,7 +19,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -36,9 +36,9 @@ using (var scope = app.Services.CreateScope())
     var usermanager=scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
     if (!dbContext.Roles.Any())
     {
-        dbContext.Roles.Add(new IdentityRole("Admin"));
-        dbContext.Roles.Add(new IdentityRole("Petugas"));
-        dbContext.Roles.Add(new IdentityRole("Client"));
+        dbContext.Roles.Add(new IdentityRole("Admin") { NormalizedName="ADMIN" });
+        dbContext.Roles.Add(new IdentityRole("Petugas") { NormalizedName = "PETUGAS" });
+        dbContext.Roles.Add(new IdentityRole("Client") { NormalizedName = "CLIENT"});
         dbContext.SaveChanges();
 
         //var user = new IdentityUser() { Email = "", UserName = "", };

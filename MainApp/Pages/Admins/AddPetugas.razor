@@ -1,14 +1,10 @@
 ﻿@page "/admin/add-petugas/{Id:int}"
 
-@using Radzen
-@using System.Text.Json
-@using System.Text
-@using System.Text.Encodings.Web
-@using Radzen
-
-
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.UI.Services
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
+@inject UserManager<IdentityUser> userManager
 
 <PageTitle>Tambah Petugas</PageTitle>
 
@@ -113,16 +109,22 @@ else
 
     async Task Submit(Petugas model)
     {
-        var trans = await dbcontext.Database.BeginTransactionAsync();
+       try{
+            var trans = await dbcontext.Database.BeginTransactionAsync();
         if(model.Id <= 0)
-        {   
+        {
             //Create User and add user id 
+            var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, PasswordHash = "@Petugas_123", EmailConfirmed=true };
+            var createresult = await userManager.CreateAsync(user);
 
             //add role Petugas to User 
-
+            if (createresult.Succeeded)
+            {
+               await userManager.AddToRoleAsync(user, "Petugas");
+            }
 
             //create petugas and Add User iD to petugas
-
+            model.UserId = user.Id;
             dbcontext.Petugas.Add(model);
             await dbcontext.SaveChangesAsync();
             await trans.CommitAsync();
@@ -133,6 +135,9 @@ else
             await trans.CommitAsync();
         }
         nav.NavigateTo("admin/petugas");
+       }  catch (Exception ex)  {
+
+       }   
     }
 
     void Cancel()
