@@ -111,30 +111,31 @@ else
     {
        try{
             var trans = await dbcontext.Database.BeginTransactionAsync();
-        if(model.Id <= 0)
-        {
-            //Create User and add user id 
-            var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, PasswordHash = "@Petugas_123", EmailConfirmed=true };
-            var createresult = await userManager.CreateAsync(user);
-
-            //add role Petugas to User 
-            if (createresult.Succeeded)
+            if (model.Id <= 0)
             {
-               await userManager.AddToRoleAsync(user, "Petugas");
-            }
+                //Create User and add user id
+                //@Petugas123
+                var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, PasswordHash = "$2a$09$3Cni7PqCj47KHaiocZj7MuSQz0wvxzBYSDhDuFlwnlnOT4Gib/3fK", EmailConfirmed = true };
+                var createresult = await userManager.CreateAsync(user);
 
-            //create petugas and Add User iD to petugas
-            model.UserId = user.Id;
-            dbcontext.Petugas.Add(model);
-            await dbcontext.SaveChangesAsync();
-            await trans.CommitAsync();
-        }
-        else
-        {
-            dbcontext.SaveChanges();
-            await trans.CommitAsync();
-        }
-        nav.NavigateTo("admin/petugas");
+                //add role Petugas to User
+                if (createresult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Petugas");
+                }
+
+                //create petugas and Add User iD to petugas
+                model.UserId = user.Id;
+                dbcontext.Petugas.Add(model);
+                await dbcontext.SaveChangesAsync();
+                await trans.CommitAsync();
+            }
+            else
+            {
+                dbcontext.SaveChanges();
+                await trans.CommitAsync();
+            }
+            nav.NavigateTo("admin/petugas");
        }  catch (Exception ex)  {
 
        }   

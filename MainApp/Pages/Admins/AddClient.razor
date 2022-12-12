@@ -1,5 +1,8 @@
 ﻿@page "/admin/add-client/{Id:int}"
 @using Radzen
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.UI
+@inject UserManager<IdentityUser> usermanager
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 
@@ -100,19 +103,36 @@ else
 
     async Task Submit(Client model)
     {
-        var trans = await dbcontext.Database.BeginTransactionAsync();
-        if(model.Id <= 0)
-        {
-            dbcontext.Clients.Add(model);
-            await dbcontext.SaveChangesAsync();
-            await trans.CommitAsync();
+        try{
+            var trans = await dbcontext.Database.BeginTransactionAsync();
+            if (model.Id <= 0)
+            {
+                //create user
+                var user = new IdentityUser(model.Email) {Email = model.Email, UserName = model.Email, PasswordHash = "@Client123", EmailConfirmed = true};
+                var createresult = await usermanager.CreateAsync(user);
+
+                if(createresult.Succeeded)
+                {
+                    await usermanager.AddToRoleAsync(user, "Client");
+                }
+
+                model.UserId = user.Id;
+                dbcontext.Clients.Add(model);
+                await dbcontext.SaveChangesAsync();
+                await trans.CommitAsync();
+            }
+            else
+            {
+                dbcontext.SaveChanges();
+                await trans.CommitAsync();
+            }
+            nav.NavigateTo("admin/client");
         }
-        else
+        catch(Exception ex)
         {
-            dbcontext.SaveChanges();
-            await trans.CommitAsync();
+
         }
-        nav.NavigateTo("admin/client");
+        
     }
 
     void Cancel()
