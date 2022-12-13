@@ -1,6 +1,10 @@
 ﻿@page "/admin/client"
+@using Radzen
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
+@*@inject DialogService dialogService
+@inject NotificationService NotificationService*@
+
 <PageTitle>Client</PageTitle>
 
 
@@ -50,9 +54,48 @@
 
     async Task delete(Client model)
     {
-        dbcontext.Clients.Remove(model);
-        data.Remove(model);
-        await dbcontext.SaveChangesAsync();
-        await grid.Reload();
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        try
+        {
+            //var result = await dialogService.Confirm("Yakin Hapus Data ?", "Hapus", new ConfirmOptions() { OkButtonText = "Ya", CancelButtonText = "Batal" });
+            //if(result.Value)
+            //{
+            //    dbcontext.Clients.Remove(model);
+
+            //    var user = dbcontext.Users.SingleOrDefault(x => x.Id == model.UserId);
+            //    if (user != null)
+            //    {
+            //        dbcontext.Users.Remove(user);
+            //    }
+
+            //    data.Remove(model);
+            //    await dbcontext.SaveChangesAsync();
+            //    NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
+            //    await grid.Reload();
+            //}
+            //    dbcontext.Clients.Remove(model);
+
+            dbcontext.Clients.Remove(model);
+
+
+            var user = dbcontext.Users.SingleOrDefault(x => x.Id == model.UserId);
+            if (user != null)
+            {
+                dbcontext.Users.Remove(user);
+            }
+
+            data.Remove(model);
+            await dbcontext.SaveChangesAsync();
+            //NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
+            await trans.CommitAsync();
+            await grid.Reload();
+           
+        }
+        catch(Exception ex)
+        {
+            await trans.RollbackAsync();
+            //NotificationService.Notify(new NotificationMessage { Detail = ex.Message, Severity = NotificationSeverity.Error, Duration = 2500 });
+        }
+
     }
 }

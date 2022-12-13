@@ -53,6 +53,16 @@ using (var scope = app.Services.CreateScope())
 
     }
 
+    if(!dbContext.Users.Any())
+    {
+        var user = new IdentityUser { Email = "admin@gmail.com", UserName = "admin@gmail.com", PasswordHash = "@Aadmin123", EmailConfirmed = true };
+        var createResult = await usermanager.CreateAsync(user);
+
+        if(createResult.Succeeded)
+        {
+           await usermanager.AddToRoleAsync(user, "Admin");
+        }
+    }
 
 }
 

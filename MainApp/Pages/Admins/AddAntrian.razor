@@ -21,7 +21,6 @@ else
                             <RadzenLabel Text="Client" />
                         </div>
                         <div class="col-md-8">
-                            @*<RadzenDropDown @bind-Value="antrian.Clients" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
                             <RadzenDropDown @bind-Value="antrian.Client" Style="width:100%" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         </div>
                     </div>
@@ -30,8 +29,7 @@ else
                             <RadzenLabel Text="Loket" />
                         </div>
                         <div class="col-md-8">
-                            @*<RadzenDropDown @bind-Value="antrian.Clients" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" />*@
-                            <RadzenDropDown @bind-Value="antrian.Layanan" Style="width/>:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                            <RadzenDropDown @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                     </div>
                     </div>
                     <div class="row justify-content-center">

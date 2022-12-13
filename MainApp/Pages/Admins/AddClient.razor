@@ -2,10 +2,14 @@
 @using Radzen
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Identity.UI
+@using Radzen
+@using System.Text.Json
+@using System.Text
+@using System.Text.Encodings.Web
 @inject UserManager<IdentityUser> usermanager
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
-
+@*@inject NotificationService NotificationService*@
 
 <PageTitle>Tambah Client</PageTitle>
 
@@ -16,7 +20,7 @@
 else
 {
     <div class="container-fluid">
-        <RadzenTemplateForm Data="@model" Submit="@(async (Client args) => {await Submit (args);})">
+        <RadzenTemplateForm Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})">
             <Radzen.Blazor.RadzenFieldset Text="Tambah Data Client">
                 <Radzen.Blazor.RadzenCard>
                     <div class="row m-1">
@@ -25,6 +29,7 @@ else
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="model.Nik" style="width: 100%;" Name="Nik" />
+                            <RadzenRequiredValidator Component="Nik" Text="NIK tidak boleh kosong" Popup=false Style="position:relative" />
                         </div>
                     </div>
                     <div class="row m-1">
@@ -53,7 +58,7 @@ else
                     </div>
                     <div class="row m-1">
                         <div class="col-md-4">
-                            <Radzen.Blazor.RadzenLabel Text="JenisKelamin" />
+                            <Radzen.Blazor.RadzenLabel Text="Jenis Kelamin" />
                         </div>
                         <div class="col-md-8">
                             <RadzenDropDown style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />
@@ -101,10 +106,15 @@ else
         return base.OnInitializedAsync();
     }
 
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        // console.
+    }
+
     async Task Submit(Client model)
     {
+        var trans = await dbcontext.Database.BeginTransactionAsync();
         try{
-            var trans = await dbcontext.Database.BeginTransactionAsync();
             if (model.Id <= 0)
             {
                 //create user
@@ -126,11 +136,13 @@ else
                 dbcontext.SaveChanges();
                 await trans.CommitAsync();
             }
+            //NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
             nav.NavigateTo("admin/client");
         }
         catch(Exception ex)
         {
-
+            await trans.RollbackAsync();
+            //NotificationService.Notify(new NotificationMessage { Detail = ex.Message, Severity = NotificationSeverity.Error, Duration = 2500 });
         }
         
     }

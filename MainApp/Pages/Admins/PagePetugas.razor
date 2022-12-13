@@ -53,10 +53,26 @@
 
     async Task Delete(Petugas model)
     {
-        dbcontext.Petugas.Remove(model);
-        data.Remove(model);
-        await dbcontext.SaveChangesAsync();
-        await grid.Reload();
+        var trans = dbcontext.Database.BeginTransaction();
+        try
+        {
+            dbcontext.Petugas.Remove(model);
+
+            var user = dbcontext.Users.SingleOrDefault(x => x.Id == model.UserId);
+            if(user != null)
+            {
+                dbcontext.Users.Remove(user);
+            }
+
+            data.Remove(model);
+            await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
+            await grid.Reload();
+        }
+        catch(Exception ex)
+        {
+
+        }
     }
 
 }
