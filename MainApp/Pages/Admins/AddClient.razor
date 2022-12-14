@@ -38,6 +38,7 @@ else
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
+                            <RadzenRequiredValidator Component="Nama" Text="Nama tidak boleh kosong !" Popup=false  Style="position:relative" />
                         </div>
                     </div>
                     <div class="row m-1">
@@ -46,6 +47,7 @@ else
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="model.Alamat" style="width: 100%;" Name="Alamat" />
+                            <RadzenRequiredValidator Component="Alamat" Text="Alamat tidak boleh kosong !" Popup=false Style="position:relative" />
                         </div>
                     </div>
                     <div class="row m-1">
@@ -54,6 +56,7 @@ else
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="model.Telepon" style="width: 100%;" Name="Telepon" />
+                            <RadzenRequiredValidator Component="Telepon" Text="Telepon tidak boleh kosong !" Popup=false Style="position:relative" />
                         </div>
                     </div>
                     <div class="row m-1">
@@ -70,6 +73,8 @@ else
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="model.Email" style="width: 100%;" Name="Email" />
+                            <RadzenRequiredValidator Component="Email" Text="Is required" Popup=false Style="position:relative" />
+                            <RadzenEmailValidator Component="Email" Text="Enter Email" Popup=false Style="position:relative" />
                         </div>
                     </div>
                     <div class="row justify-content-center">

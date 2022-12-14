@@ -24,6 +24,7 @@ else{
                                 </div>
                                 <div class="col-md-8">
                                     <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
+                                    <RadzenRequiredValidator Component="Nama" Text="Loket atau Pelayanan tidak boleh kosong !" Popup=true Style="position:relative"/>
                                 </div>
                             </div>
                             <div class="row justify-content-center">
