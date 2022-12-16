@@ -121,8 +121,8 @@ else
             {
                 //Create User and add user id
                 //@Petugas123
-                var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, PasswordHash = "$2a$09$3Cni7PqCj47KHaiocZj7MuSQz0wvxzBYSDhDuFlwnlnOT4Gib/3fK", EmailConfirmed = true };
-                var createresult = await userManager.CreateAsync(user);
+                var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, EmailConfirmed = true };
+                var createresult = await userManager.CreateAsync(user, "@Petugas123");
 
                 //add role Petugas to User
                 if (createresult.Succeeded)
