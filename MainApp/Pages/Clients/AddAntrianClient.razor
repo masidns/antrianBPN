@@ -8,8 +8,8 @@
 
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
-@inject UserManager<IdentityUser> userManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<IdentityUser> userManager
 
 
 <PageTitle>Tambah Antrian</PageTitle>
@@ -58,15 +58,13 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    //Antrian model;
     ICollection<Client> Clients;
     ICollection<Layanan> Layanans;
 
     Client client = new();
     Antrian antrian = new();
-    //Antrian antrian = new();
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Clients = dbcontext.Clients.ToList();
         Layanans = dbcontext.Layanans.ToList();
@@ -84,7 +82,7 @@ else
         }
 
 
-        return base.OnInitializedAsync();
+        //return base.OnInitializedAsync();
     }
 
     //protected override Task OnInitializedAsync()
