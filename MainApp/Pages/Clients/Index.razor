@@ -1,4 +1,5 @@
-﻿@layout ClientLayout
+﻿@attribute [Authorize(Roles = "Client")]
+@layout ClientLayout
 @page "/client"
 
 <PageTitle>Index</PageTitle>

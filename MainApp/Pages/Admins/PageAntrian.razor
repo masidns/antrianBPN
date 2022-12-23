@@ -1,6 +1,7 @@
-﻿@layout AdminLayout
+﻿@attribute [Authorize(Roles = "Admin")]
+@layout AdminLayout
 @page "/admin/antrian"
-@using Microsoft.EntityFrameworkCore;
+@using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 

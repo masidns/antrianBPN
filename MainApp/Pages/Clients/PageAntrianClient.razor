@@ -1,6 +1,6 @@
-﻿@attribute [Authorize(Roles = "Petugas")]
-@layout PetugasLayout
-@page "/petugas/antrian"
+﻿@attribute [Authorize(Roles = "Client")]
+@layout ClientLayout
+@page "/client/antrian"
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
@@ -12,7 +12,7 @@
         <RadzenCard>
             <div class="row">
                 <div class="col">
-                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
+                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/client/add-antrian/0"))" />
                 </div>
             </div>
             <div class="row mt-3">

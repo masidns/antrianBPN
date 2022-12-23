@@ -1,4 +1,5 @@
-﻿@layout AdminLayout
+﻿@attribute [Authorize(Roles = "Admin")]
+@layout AdminLayout
 @page "/admin/add-loket/{id:int}"
 @*@using System.Text.RegularExpressions
 @using Microsoft.EntityFrameworkCore*@

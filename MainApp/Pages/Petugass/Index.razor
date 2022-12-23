@@ -1,4 +1,5 @@
-﻿@layout PetugasLayout
+﻿@attribute [Authorize(Roles = "Petugas")]
+@layout PetugasLayout
 @page "/petugas"
 
 <PageTitle>Index</PageTitle>
