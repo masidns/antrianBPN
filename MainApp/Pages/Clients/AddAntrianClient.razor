@@ -75,29 +75,10 @@ else
         }
         else
         {
-            //antrian = (Antrian)antrianid;
-            //notPublish = true;
-
             antrian = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
         }
-
-
         //return base.OnInitializedAsync();
     }
-
-    //protected override Task OnInitializedAsync()
-    //{
-    //    Clients = dbcontext.Clients.ToList();
-    //    if (Id <= 0)
-    //    {
-    //        antrian = new Antrian();
-    //    }
-    //    else
-    //    {
-    //        antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
-    //    }
-    //    return base.OnInitializedAsync();
-    //}
 
     async Task Submit(Antrian model)
     {
