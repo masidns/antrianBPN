@@ -55,8 +55,8 @@ using (var scope = app.Services.CreateScope())
 
     if(!dbContext.Users.Any())
     {
-        var user = new IdentityUser { Email = "admin@gmail.com", UserName = "admin@gmail.com", PasswordHash = "@Aadmin123", EmailConfirmed = true };
-        var createResult = await usermanager.CreateAsync(user);
+        var user = new IdentityUser { Email = "admin@gmail.com", UserName = "admin@gmail.com", EmailConfirmed = true };
+        var createResult = await usermanager.CreateAsync(user, "@Admin123");
 
         if(createResult.Succeeded)
         {

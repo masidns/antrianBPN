@@ -1,0 +1,106 @@
+﻿@attribute [Authorize(Roles = "Client")]
+@layout ClientLayout
+@page "/client/antrian/{Id:int}"
+
+@using System.Text.RegularExpressions
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+
+@inject ApplicationDbContext dbcontext
+@inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<IdentityUser> userManager
+
+ <PageTitle>Antrian</PageTitle>
+
+
+ @if(model == null)
+ {
+     <p>Loading...</p>
+ }
+ else
+ {
+     <div class="container-fluid">
+         <RadzenFieldset Text="Antrian">
+             <RadzenCard>
+                <RadzenTemplateForm Data="@model" Submit="@(async (Antrian args)=>{await Submit(args);})">
+                     <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Client" />
+                        </div>
+                        <div class="col-md-8">
+
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Loket" />
+                        </div>
+                        <div class="col-md-8">
+
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                    </div>
+                 </RadzenTemplateForm>
+             </RadzenCard>
+         </RadzenFieldset>
+     </div>
+ }
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    ICollection<Client> Clients;
+    ICollection<Layanan> Layanans;
+
+    Client client = new();
+    Antrian antrian = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Clients = dbcontext.Clients.ToList();
+        Layanans = dbcontext.Layanans.ToList();
+
+        if (Id <= 0)
+        {
+            model = new Antrian();
+        }
+        else
+        {
+            model = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
+        }
+        //return base.OnInitializedAsync();
+    }
+
+    async Task Submit(Antrian model)
+    {
+        //model.Client = client.Antrian ;
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        if (model.Id <= 0)
+        {
+            dbcontext.Antrians.Add(model);
+            await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
+        }
+        else
+        {
+            dbcontext.SaveChanges();
+            await trans.CommitAsync();
+        }
+        nav.NavigateTo("client/antrian");
+
+    }
+
+    void Cancel()
+    {
+        nav.NavigateTo("client/antrian");
+    }
+
+}
