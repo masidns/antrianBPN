@@ -29,7 +29,7 @@ else
                             <RadzenLabel Text="Client" />
                         </div>
                         <div class="col-md-8">
-                            <RadzenDropDown @bind-Value="antrian.Client" Style="width:100%" TextProperty="Nama" TValue="Client" Data="@Clients" Name="Client" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                            <RadzenTextBox @bind-Value="antrian.Client.Nama" Disabled=true Style="width:100%"  />
                         </div>
                     </div>
                     <div class="row m-1">
@@ -69,6 +69,7 @@ else
         Clients = dbcontext.Clients.ToList();
         Layanans = dbcontext.Layanans.ToList();
 
+
         if (Id <= 0)
         {
             antrian = new Antrian();
@@ -77,6 +78,15 @@ else
         {
             antrian = dbcontext.Antrians.SingleOrDefault(x => x.Id == Id);
         }
+        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if(userState!=null)
+        {
+            var user = userState.User.Identity.Name;
+            client = Clients.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
+            antrian.Client = client;
+        }
+
+
         //return base.OnInitializedAsync();
     }
 

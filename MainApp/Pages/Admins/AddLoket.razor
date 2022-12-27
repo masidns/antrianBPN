@@ -6,6 +6,7 @@
 
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
+@inject AuthenticationStateProvider authStateProvider
 
 <PageTitle>Tambah Loket</PageTitle>
 
@@ -56,7 +57,7 @@ else{
 
     protected override Task OnInitializedAsync()
     {
-
+       
         if (Id <= 0)
         {
             model = new Layanan();
