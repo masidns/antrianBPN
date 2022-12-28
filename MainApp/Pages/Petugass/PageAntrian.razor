@@ -4,6 +4,8 @@
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
 <PageTitle>Antrian</PageTitle>
 
@@ -46,24 +48,10 @@
     protected override async Task OnInitializedAsync()
     {
         var datasourcetemp = new List<Antrian>();
-
-        foreach (var item in dbcontext.Antrians.Include(x => x.Layanan))
-        {
-            datasourcetemp.Add(new Antrian
-                {
-                    Layanan = item.Layanan,
-                    Id = item.Id,
-                });
-        }
-        foreach (var item in dbcontext.Antrians.Include(x => x.Client))
-        {
-            datasourcetemp.Add(new Antrian
-                {
-                    Client = item.Client,
-                    Id = item.Id,
-                });
-        }
-        datasource = dbcontext.Antrians.ToList();
+        datasource = dbcontext.Antrians.Where(x=>x.TanggalAntrian > DateTime.Today)
+        .Include(x=>x.Client)
+        .Include(x=>x.Layanan)
+        .ToList();
         data = datasource;
         await base.OnInitializedAsync();
     }
