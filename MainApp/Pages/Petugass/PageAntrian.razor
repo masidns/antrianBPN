@@ -98,7 +98,7 @@
    
         if (model.Id != 0)
         {
-            dbcontext.SaveChanges(model.Status=true);
+            dbcontext.SaveChanges(model.Status=true)  ;
             await trans.CommitAsync();
         }
     }
