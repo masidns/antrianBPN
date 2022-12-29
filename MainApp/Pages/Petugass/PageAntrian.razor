@@ -2,21 +2,29 @@
 @layout PetugasLayout
 @page "/petugas/antrian"
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 @inject AuthenticationStateProvider AuthenticationStateProvider
-
+@inject UserManager<IdentityUser> userManager
 
 <PageTitle>Antrian</PageTitle>
 
 <div class="container-fluid">
     <RadzenFieldset Text="Daftar Antrian">
         <RadzenCard>
-            <div class="row">
+           @* <div class="row">
                 <div class="col">
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
                 </div>
+            </div>*@
+            <div class="row">
+                <div class="col">
+                    <RadzenDropDown Style="width: 100%" Placeholder="Pilih Pelayanan..." @bind-Value="layanan.Nama" Data="Layanans"  AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                </div>
             </div>
+
             <div class="row mt-3">
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
@@ -29,6 +37,7 @@
                                 <Template Context="item">
                                     <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
                                     <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=>update(item))" ButtonStyle="ButtonStyle.Danger" Icon="update" Size="ButtonSize.Small" />
                                 </Template>
                             </RadzenDataGridColumn>
                         </Columns>
@@ -43,16 +52,35 @@
     public ICollection<Antrian> data { get; set; }
     public ICollection<Antrian> datasource { get; set; } = new List<Antrian>();
 
+    ICollection<Layanan> Layanans;
+    ICollection<Petugas> Petugas;
+    //IEnumerable<Layanan> Layanans;
+
     RadzenDataGrid<Antrian> grid;
+
+    Layanan layanan = new();
+    Petugas petugas = new();
+    Antrian antrian= new();
 
     protected override async Task OnInitializedAsync()
     {
+        Layanans = dbcontext.Layanans.ToList();
         var datasourcetemp = new List<Antrian>();
-        datasource = dbcontext.Antrians.Where(x=>x.TanggalAntrian > DateTime.Today)
-        .Include(x=>x.Client)
-        .Include(x=>x.Layanan)
-        .ToList();
-        data = datasource;
+
+        //datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today)
+        //.Include(x => x.Client)
+        //.Include(x => x.Layanan)
+        //.ToList();
+        //data = datasource;
+
+        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if(userState != null)
+        {
+            var user = userState.User.Identity.Name;
+            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today).Include(x=>x.Client).Include(x => x.Layanan).ToList();
+            data = datasource;
+        }
+
         await base.OnInitializedAsync();
     }
 
@@ -62,6 +90,17 @@
         data.Remove(model);
         await dbcontext.SaveChangesAsync();
         await grid.Reload();
+    }
+
+    async Task update(Antrian model)
+    {
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+   
+        if (model.Id != 0)
+        {
+            dbcontext.SaveChanges(model.Status=true);
+            await trans.CommitAsync();
+        }
     }
 
 }
