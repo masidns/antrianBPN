@@ -11,6 +11,12 @@
 
 <PageTitle>Antrian</PageTitle>
 
+@if(data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
 <div class="container-fluid">
     <RadzenFieldset Text="Daftar Antrian">
         <RadzenCard>
@@ -19,12 +25,12 @@
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
                 </div>
             </div>*@
+
             <div class="row">
                 <div class="col">
-                    <RadzenDropDown Style="width: 100%" Placeholder="Pilih Pelayanan..." @bind-Value="layanan.Nama" Data="Layanans"  AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                    <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
@@ -33,10 +39,11 @@
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Status" Property="Status" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Action">
                                 <Template Context="item">
-                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
-                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                    <RadzenButton Click="@(()=> nav.NavigateTo($"petugas/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                    @*<RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />*@
                                     <RadzenButton Click="@(()=>update(item))" ButtonStyle="ButtonStyle.Danger" Icon="update" Size="ButtonSize.Small" />
                                 </Template>
                             </RadzenDataGridColumn>
@@ -47,6 +54,7 @@
         </RadzenCard>
     </RadzenFieldset>
 </div>
+}
 
 @code {
     public ICollection<Antrian> data { get; set; }
@@ -66,21 +74,18 @@
     {
         Layanans = dbcontext.Layanans.ToList();
         var datasourcetemp = new List<Antrian>();
-
-        //datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today)
-        //.Include(x => x.Client)
-        //.Include(x => x.Layanan)
-        //.ToList();
-        //data = datasource;
-
-        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if(userState != null)
-        {
-            var user = userState.User.Identity.Name;
-            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today).Include(x=>x.Client).Include(x => x.Layanan).ToList();
+            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today)
+            .Include(x => x.Client)
+            .Include(x => x.Layanan)
+            .Include(x=>x.Petugas)
+            .ToList();
             data = datasource;
-        }
-
+        //var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //if (userState != null)
+        //{
+        //    var user = userState.User.Identity.Name;
+        //    petugas = dbcontext.Petugas.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
+        //}
         await base.OnInitializedAsync();
     }
 
@@ -95,7 +100,14 @@
     async Task update(Antrian model)
     {
         var trans = await dbcontext.Database.BeginTransactionAsync();
-   
+
+        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (userState != null)
+        {
+            var user = userState.User.Identity.Name;
+            petugas = Petugas.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
+            antrian.Petugas = petugas;
+        }
         if (model.Id != 0)
         {
             dbcontext.SaveChanges(model.Status=true)  ;

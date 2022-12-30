@@ -57,7 +57,11 @@
             var user = userState.User.Identity.Name;
             //client = Clients.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
             //antrian.Client = client;
-            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today).Where(x => x.Client.Email.ToLower() == user.ToLower()).Include(x => x.Layanan).ToList();
+            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today)
+            .Where(x => x.Client.Email.ToLower() == user.ToLower())
+            .Include(x => x.Layanan)
+            .Include(x => x.Client)
+            .ToList();
             data = datasource;
         }
         await base.OnInitializedAsync();

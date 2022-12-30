@@ -1,0 +1,193 @@
+﻿@attribute [Authorize(Roles = "Petugas")]
+@layout PetugasLayout
+@page "/petugas/add-antrian/{Id:int}"
+@using System.Text.RegularExpressions
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+
+@inject ApplicationDbContext dbcontext
+@inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<IdentityUser> userManager
+
+
+<PageTitle>Antrian</PageTitle>
+
+@if(antrian == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
+    <div class="container-fluid">
+            <RadzenCard>
+                <RadzenTemplateForm Data="@antrian" Submit="@(async (Antrian args)=>{await Submit(args);})">
+                    <RadzenFieldset Text="Data Client">
+                        <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="NIK" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="antrian.Client.Nik" Disabled=true style="width: 100%;" Name="Nik" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Nama" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="antrian.Client.Nama" Disabled=true style="width: 100%;" Name="Nama" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Alamat" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="antrian.Client.Alamat" Disabled=true style="width: 100%;" Name="Alamat" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Telepon" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="antrian.Client.Telepon" Disabled=true style="width: 100%;" Name="Telepon" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Email" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value="antrian.Client.Email" Disabled=true style="width: 100%;" Name="Email" />
+                        </div>
+                    </div>
+                    </RadzenFieldset>
+                    <RadzenFieldset Text="Data Antrian">
+                        <div class="row m-1">
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Loket" />
+                            </div>
+                            <div class="col-md-8">
+                                <RadzenTextBox @bind-Value="antrian.Layanan.Nama" Disabled=true Style="width:100%" Name="Nama" />
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Tanggal Antrian" />
+                            </div>
+                            <div class="col-md-8">
+                                <RadzenDatePicker @bind-Value="antrian.TanggalAntrian" Disabled=true Style="width:100%" Name="Nama" />
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Nama Petugas" />
+                            </div>
+                            <div class="col-md-8">
+                                <RadzenTextBox @bind-Value="antrian.Petugas.Nama" Disabled=true Style="width:100%" Name="Nama" />
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Nama Petugas" />
+                            </div>
+                            <div class="col-md-8">
+                                <RadzenCheckBox @bind-Value="antrian.Status" Name="Status">Selesai</RadzenCheckBox>
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                    </div>
+                </RadzenTemplateForm>
+            </RadzenCard>
+    </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    //Antrian model;
+    ICollection<Client> Clients;
+    ICollection<Layanan> Layanans;
+    ICollection<Petugas> Petugas;
+
+    Client client = new();
+    Antrian antrian = new();
+    Petugas petugas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Clients = dbcontext.Clients.ToList();
+        Layanans = dbcontext.Layanans.ToList();
+        Petugas = dbcontext.Petugas.ToList();
+
+        if (Id <= 0)
+        {
+            antrian = new Antrian();
+        }
+        else
+        {
+            //antrian = (Antrian)antrianid;
+            //notPublish = true;
+            antrian = dbcontext.Antrians
+            .SingleOrDefault(x => x.Id == Id);
+        }
+        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (userState != null)
+        {
+            var user = userState.User.Identity.Name;
+            petugas = Petugas.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
+            antrian.Petugas = petugas;
+        }
+
+        //return base.OnInitializedAsync();
+    }
+
+    //protected override Task OnInitializedAsync()
+    //{
+    //    Clients = dbcontext.Clients.ToList();
+    //    if (Id <= 0)
+    //    {
+    //        antrian = new Antrian();
+    //    }
+    //    else
+    //    {
+    //        antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
+    //    }
+    //    return base.OnInitializedAsync();
+    //}
+
+    async Task Submit(Antrian model)
+    {
+        //model.Client = client.Antrian ;
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        if(model.Id <= 0)
+        {
+            dbcontext.Antrians.Add(model);
+            await dbcontext.SaveChangesAsync();
+            await trans.CommitAsync();
+        }
+        else
+        {
+            dbcontext.SaveChanges();
+            await trans.CommitAsync();
+        }
+        nav.NavigateTo("petugas/antrian");
+
+    }
+
+    void Cancel()
+    {
+        nav.NavigateTo("petugas/antrian");
+    }
+
+}
