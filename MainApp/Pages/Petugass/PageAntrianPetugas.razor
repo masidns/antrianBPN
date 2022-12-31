@@ -31,6 +31,7 @@ else
                     <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                 </div>
             </div>
+
             <div class="row mt-3">
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
@@ -38,13 +39,22 @@ else
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
-                            <RadzenDataGridColumn TItem="Antrian" Title="Status" Property="Status" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama" />
+                            @*<RadzenDataGridColumn TItem="Antrian" Title="Status" Property="Status" />*@
+                                <RadzenDataGridColumn TItem="Antrian" Title="Status">
+                                    <Template Context="item">
+                                        @(item.Status == true  ? "Antrian Selesai" : "Dalam Antrian")
+                                    </Template>
+                                </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="Antrian" Title="Action">
                                 <Template Context="item">
-                                    <RadzenButton Click="@(()=> nav.NavigateTo($"petugas/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
-                                    @*<RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />*@
-                                    <RadzenButton Click="@(()=>update(item))" ButtonStyle="ButtonStyle.Danger" Icon="update" Size="ButtonSize.Small" />
+                                    @if(item.Status != true)
+                                        {
+                                         <RadzenButton Click="@(()=> nav.NavigateTo($"petugas/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                        @*<RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />*@
+                                        <RadzenButton Click="@(()=>update(item))" ButtonStyle="ButtonStyle.Danger" Icon="update" Size="ButtonSize.Small" />
+                                        }
+
                                 </Template>
                             </RadzenDataGridColumn>
                         </Columns>
@@ -80,12 +90,6 @@ else
             .Include(x=>x.Petugas)
             .ToList();
             data = datasource;
-        //var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        //if (userState != null)
-        //{
-        //    var user = userState.User.Identity.Name;
-        //    petugas = dbcontext.Petugas.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
-        //}
         await base.OnInitializedAsync();
     }
 
@@ -100,14 +104,8 @@ else
     async Task update(Antrian model)
     {
         var trans = await dbcontext.Database.BeginTransactionAsync();
+        Petugas = dbcontext.Petugas.ToList();
 
-        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (userState != null)
-        {
-            var user = userState.User.Identity.Name;
-            petugas = Petugas.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
-            antrian.Petugas = petugas;
-        }
         if (model.Id != 0)
         {
             dbcontext.SaveChanges(model.Status=true)  ;

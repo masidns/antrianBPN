@@ -94,7 +94,7 @@ else
                                 <RadzenLabel Text="Nama Petugas" />
                             </div>
                             <div class="col-md-8">
-                                <RadzenCheckBox @bind-Value="antrian.Status" Name="Status">Selesai</RadzenCheckBox>
+                                <RadzenCheckBox @bind-Value="antrian.Status" Name="Status" />Selesai
                             </div>
                         </div>
                     </RadzenFieldset>
@@ -151,20 +151,6 @@ else
 
         //return base.OnInitializedAsync();
     }
-
-    //protected override Task OnInitializedAsync()
-    //{
-    //    Clients = dbcontext.Clients.ToList();
-    //    if (Id <= 0)
-    //    {
-    //        antrian = new Antrian();
-    //    }
-    //    else
-    //    {
-    //        antrian = dbcontext.Antrians.Include(x => x.Client).SingleOrDefault(x => x.Id == Id);
-    //    }
-    //    return base.OnInitializedAsync();
-    //}
 
     async Task Submit(Antrian model)
     {
