@@ -22,12 +22,19 @@
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian"/>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Status" Property="Status"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Status">
+                                <Template Context="item">
+                                    @(item.Status == true ? "Antrian Selesai" : "Dalam Antrian")
+                                </Template>
+                            </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Action">
                                 <Template Context="item">
-                                    <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
-                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                    @if(item.Status != true)
+                                    {
+                                        <RadzenButton Click="@(()=> nav.NavigateTo($"admin/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
+                                        <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
+                                    }
                                 </Template>
                             </RadzenDataGridColumn>
                         </Columns>

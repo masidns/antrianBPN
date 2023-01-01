@@ -11,30 +11,26 @@
 
 <PageTitle>Antrian</PageTitle>
 
-@if(data == null)
+@*@if(data == null)
 {
     <p><em>Loading...</em></p>
 }
 else 
-{
+{*@
 <div class="container-fluid">
     <RadzenFieldset Text="Daftar Antrian">
         <RadzenCard>
-           @* <div class="row">
-                <div class="col">
-                    <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
-                </div>
-            </div>*@
-
             <div class="row">
                 <div class="col">
-                    <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                    @*<RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="antrian.Layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />*@
+                    <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" onchange="@(() => RefreshData())" />
+
                 </div>
             </div>
 
             <div class="row mt-3">
                 <div class="col">
-                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                    <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
@@ -64,7 +60,7 @@ else
         </RadzenCard>
     </RadzenFieldset>
 </div>
-}
+
 
 @code {
     public ICollection<Antrian> data { get; set; }
@@ -104,13 +100,17 @@ else
     async Task update(Antrian model)
     {
         var trans = await dbcontext.Database.BeginTransactionAsync();
-        Petugas = dbcontext.Petugas.ToList();
-
         if (model.Id != 0)
-        {
             dbcontext.SaveChanges(model.Status=true)  ;
             await trans.CommitAsync();
-        }
     }
 
+    private void RefreshData()
+    {
+        data = dbcontext.Antrians
+            .Include(x => x.Layanan)
+            .Where(x => x.Layanan.Nama == antrian.Layanan.Nama)
+            .ToList();
+        grid.Reload();
+    }
 }
