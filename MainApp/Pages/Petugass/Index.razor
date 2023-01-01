@@ -20,9 +20,6 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Nomor Urut" Property="NomorUrut" />
-                            
-
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
@@ -41,7 +38,6 @@
 </div>
 
 @code {
-    public int NomorUrut { get; set; }
     public ICollection<Antrian> data { get; set; }
     public ICollection<Antrian> datasource { get; set; } = new List<Antrian>();
     ICollection<Layanan> Layanans;
@@ -66,16 +62,6 @@
         .OrderBy(x => x.TanggalAntrian)
         .ToList();
         data = datasource;
-
-        foreach (var layanan in Layanans)
-        {
-            int nomorUrut = 1;
-            foreach (var item in data.Where(x => x.Layanan == layanan))
-            {
-                item.NomorUrut = nomorUrut++;
-            }
-        }
-
         await base.OnInitializedAsync();
     }
 
