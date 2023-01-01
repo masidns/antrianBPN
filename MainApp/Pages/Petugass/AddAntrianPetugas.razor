@@ -141,7 +141,7 @@ else
             antrian = dbcontext.Antrians
             .SingleOrDefault(x => x.Id == Id);
         }
-        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userState = await AuthenticationStateProvider.GetAuthenticationStateAsync();        
         if (userState != null)
         {
             var user = userState.User.Identity.Name;

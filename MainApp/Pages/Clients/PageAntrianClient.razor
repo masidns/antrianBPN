@@ -29,15 +29,6 @@
                                     @(item.Status == true ? "Antrian Selesai" : "Dalam Antrian")
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Action">
-                                <Template Context="item">
-                                    @if (item.Status != true)
-                                    {
-                                    <RadzenButton Click="@(()=> nav.NavigateTo($"client/add-antrian/{item.Id}"))" ButtonStyle="ButtonStyle.Warning" Icon="edit" Size="ButtonSize.Small" />
-                                    <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
-                                    }
-                                </Template>
-                            </RadzenDataGridColumn>
                         </Columns>
                     </RadzenDataGrid>
                 </div>
@@ -64,10 +55,10 @@
             var user = userState.User.Identity.Name;
             //client = Clients.Where(x => x.Email.ToLower() == user.ToLower()).FirstOrDefault();
             //antrian.Client = client;
-            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today)
-            .Where(x => x.Client.Email.ToLower() == user.ToLower())
+            datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today && x.Client.Email.ToLower() == user.ToLower())
             .Include(x => x.Layanan)
             .Include(x => x.Client)
+            .OrderBy(x => x.TanggalAntrian)
             .ToList();
             data = datasource;
         }

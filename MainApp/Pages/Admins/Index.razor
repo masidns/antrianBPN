@@ -1,26 +1,76 @@
 ﻿@attribute [Authorize(Roles = "Admin")]
 @layout AdminLayout
 @page "/admin"
+@page "/admin/home"
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext dbcontext
+@inject NavigationManager nav
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<div class="row">
-    <div class="col-lg-3 col-6">
-        <RadzenCard Style="height:450 px">
+<div class="container-fluid">
+    <RadzenFieldset Text="Daftar Antrian">
+        <RadzenCard>
             <div class="row">
                 <div class="col">
-                    <RadzenText Style="text-align:center;" Text="12" />
+                    <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                 </div>
+            </div>
+            <div class="row mt-3">
                 <div class="col">
-                    <RadzenText Text="Loket 1" />
+                    <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Status">
+                                <Template Context="item">
+                                    @(item.Status == true ? "Antrian Selesai" : "Dalam Antrian")
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama" />
+                        </Columns>
+                    </RadzenDataGrid>
                 </div>
             </div>
         </RadzenCard>
-    </div>
-    </div>
+    </RadzenFieldset>
+</div>
 
-<h1>Hello, world!</h1>
+@code {
+    public ICollection<Antrian> data { get; set; }
+    public ICollection<Antrian> datasource { get; set; } = new List<Antrian>();
+    ICollection<Layanan> Layanans;
+    RadzenDataGrid<Antrian> grid;
 
-Welcome to your new app.
+    Layanan layanan = new();
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        DateTime today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        var datasourcetemp = new List<Antrian>();
+
+        Layanans = dbcontext.Layanans.ToList();
+
+
+        datasource = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today && x.Status == false)
+        .Include(x => x.Client)
+        .Include(x => x.Layanan)
+        .Include(x => x.Petugas)
+        .OrderBy(x => x.TanggalAntrian)
+        .ToList();
+        data = datasource;
+        await base.OnInitializedAsync();
+    }
+
+    async Task delete(Antrian model)
+    {
+        dbcontext.Antrians.Remove(model);
+        data.Remove(model);
+        await dbcontext.SaveChangesAsync();
+        await grid.Reload();
+    }
+
+}

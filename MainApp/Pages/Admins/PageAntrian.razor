@@ -14,10 +14,13 @@
                 <div class="col">
                     <RadzenButton Icon="add" Click="@(()=>nav.NavigateTo($"/admin/add-antrian/0"))" />
                 </div>
+                <div class="col">
+                    <RadzenDropDown Placeholder="Pilih Pelayanan..." @bind-Value="layanan" Style="width:100%" TextProperty="Nama" TValue="Layanan" Data="@Layanans" Name="Layanan" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"  />
+                </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
+                    <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama"/>
@@ -48,30 +51,21 @@
 @code {
     public ICollection<Antrian> data { get; set; }
     public ICollection<Antrian> datasource { get; set; } = new List<Antrian>();
-
+    ICollection<Layanan> Layanans;
     RadzenDataGrid<Antrian> grid;
+
+    Layanan layanan = new(); 
+
 
     protected override async Task OnInitializedAsync()
     {
+
         DateTime today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
         var datasourcetemp = new List<Antrian>();
 
-        //foreach (var item in dbcontext.Antrians.Include(x => x.Layanan))
-        //{
-        //    datasourcetemp.Add(new Antrian
-        //        {
-        //            Layanan = item.Layanan,
-        //            Id = item.Id,
-        //        });
-        //}       
-        //foreach (var item in dbcontext.Antrians.Include(x => x.Client))
-        //{
-        //    datasourcetemp.Add(new Antrian
-        //        {
-        //            Client = item.Client,
-        //            Id = item.Id,
-        //        });
-        //}
+        Layanans = dbcontext.Layanans.ToList();
+
+
         datasource = dbcontext.Antrians.Where(x=>x.TanggalAntrian > DateTime.Today)
         .Include(x=>x.Client)
         .Include(x=>x.Layanan)
