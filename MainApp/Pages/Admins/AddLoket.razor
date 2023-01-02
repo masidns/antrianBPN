@@ -26,6 +26,10 @@ else{
                                     <RadzenLabel Text="Nama Loket / Pelayanan" />
                                 </div>
                                 <div class="col-md-8">
+                                    @if (errorMessage != null)
+                                        {
+                                        <RadzenToast Icon="error" ShowDuration="3000" Title="Error" Text="@errorMessage" />
+                                        }
                                     <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
                                     <RadzenRequiredValidator Component="Nama" Text="Loket atau Pelayanan tidak boleh kosong !" Popup=true Style="position:relative"/>
                                 </div>
@@ -54,10 +58,11 @@ else{
     public int Id { get; set; }
 
     Layanan model;
+    string errorMessage;
 
     protected override Task OnInitializedAsync()
     {
-       
+
         if (Id <= 0)
         {
             model = new Layanan();
@@ -71,18 +76,27 @@ else{
 
     async Task Submit(Layanan model)
     {
-        var trans = await dbcontext.Database.BeginTransactionAsync();
-        if(model.Id <= 0){
-            dbcontext.Layanans.Add(model);
-            await dbcontext.SaveChangesAsync();
-            await trans.CommitAsync();
-        }
-        else
+        if (dbcontext.Layanans.Any(x => x.Nama.ToLower() == model.Nama.ToLower()))
         {
-            dbcontext.SaveChanges();
-            await trans.CommitAsync();
+            errorMessage = "Layanan sudah ada dalam database. Silakan masukkan nama layanan yang lain.";
+            return;
+        }else
+        {
+            var trans = await dbcontext.Database.BeginTransactionAsync();
+            if (model.Id <= 0)
+            {
+                dbcontext.Layanans.Add(model);
+                await dbcontext.SaveChangesAsync();
+                await trans.CommitAsync();
+            }
+            else
+            {
+                dbcontext.SaveChanges();
+                await trans.CommitAsync();
+            }
+            nav.NavigateTo("/admin/loket");
         }
-        nav.NavigateTo("/admin/loket");
+        
     }
 
     void Cancel()

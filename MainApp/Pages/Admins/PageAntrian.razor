@@ -70,6 +70,7 @@
         .Include(x=>x.Client)
         .Include(x=>x.Layanan)
         .Include(x=>x.Petugas)
+        .OrderBy(x => x.TanggalAntrian)
         .ToList();
         data = datasource;
         await base.OnInitializedAsync();

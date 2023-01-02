@@ -49,7 +49,9 @@
 
     protected override Task OnInitializedAsync()
     {
-        datasource = dbcontext.Clients.ToList();
+        datasource = dbcontext.Clients
+        .OrderByDescending(a=>a.Id)
+        .ToList();
         data = datasource;
         return base.OnInitializedAsync();
     }

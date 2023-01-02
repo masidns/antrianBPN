@@ -42,9 +42,12 @@ else
                                 <Template Context="item">
                                     @if(item.Status != true)
                                         {
-                                        <RadzenButton Click="@(() => UpdateStatus(item))" ButtonStyle="ButtonStyle.Danger" Icon="update" Size="ButtonSize.Small" @onclick="() => { showToast = true ;}" />
-                                        }
-
+                                        <RadzenButton Click="@(() => UpdateStatus(item))" ButtonStyle="ButtonStyle.Success" Icon="check"  Size="ButtonSize.Small" @onclick="() => { showToast = true ;}" />
+                                    }
+                                    else
+                                    {
+                                        <RadzenIcon Name="check"></RadzenIcon>
+                                    }
                                 </Template>
                             </RadzenDataGridColumn>
                         </Columns>

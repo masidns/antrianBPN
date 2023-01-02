@@ -28,6 +28,46 @@ else
                     </div>
                     <div class="row m-1">
                         <div class="col-md-4">
+                            <RadzenLabel Text="NIK" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDropDown @bind-Value="antrian.Client" Disabled=true Style="width:100%" TextProperty="NIK" TValue="Client" Data="@Clients" Name="Client"  />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Alamat" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDropDown @bind-Value="antrian.Client" Disabled=true Style="width:100%" TextProperty="Alamat" TValue="Client" Data="@Clients" Name="Client" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Jenis Kelamin" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDropDown @bind-Value="antrian.Client" Disabled=true Style="width:100%" TextProperty="JenisKelamin" TValue="Client" Data="@Clients" Name="Client" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="No Telepon" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDropDown @bind-Value="antrian.Client" Disabled=true Style="width:100%" TextProperty="Telepon" TValue="Client" Data="@Clients" Name="Client" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Email" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDropDown @bind-Value="antrian.Client" Disabled=true Style="width:100%" TextProperty="Email" TValue="Client" Data="@Clients" Name="Client" />
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-md-4">
                             <RadzenLabel Text="Loket" />
                         </div>
                         <div class="col-md-8">

@@ -48,7 +48,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        datasource = dbcontext.Petugas.ToList();
+        datasource = dbcontext.Petugas
+        .OrderByDescending(x=>x.Id)
+        .ToList();
         data = datasource;
         await base.OnInitializedAsync();
     }
