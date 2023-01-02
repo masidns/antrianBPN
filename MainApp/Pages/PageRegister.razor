@@ -1,0 +1,178 @@
+﻿@page "/register"
+@layout RegisterLayout
+
+@using Radzen
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.UI
+@using Radzen
+@using System.Text.Json
+@using System.Text
+@using System.Text.Encodings.Web
+@inject UserManager<IdentityUser> usermanager
+@inject ApplicationDbContext dbcontext
+@inject NavigationManager nav
+
+<PageTitle>Regeister</PageTitle>
+
+<style>
+    .transparent-bg {
+        background-color: transparent;
+    }
+
+</style>
+
+@if (model == null)
+{
+    <p><em>.....</em></p>
+}
+else
+{
+    <div class="row" style="text-align:center;">
+        <div style="width:100%; height:100vh; display:flex;justify-content:center;align-items:center">
+            <section style="width:50%; background-image: linear-gradient(180deg, #406882 0%, #1A374D ); border-radius:20px;padding:30px">
+                @*<RadzenTemplateForm style="background-color: transparent;" Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})">*@
+                <RadzenTemplateForm class="transparent-bg" Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})">
+                    <Radzen.Blazor.RadzenFieldset Text="Register Client">
+                        <Radzen.Blazor.RadzenCard>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="NIK" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="model.Nik" style="width: 100%;" Name="Nik" />
+                                    <RadzenRequiredValidator Component="Nik" Text="NIK tidak boleh kosong" Popup=false Style="position:relative" />
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="Nama" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
+                                    <RadzenRequiredValidator Component="Nama" Text="Nama tidak boleh kosong !" Popup=false Style="position:relative" />
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="Alamat" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="model.Alamat" style="width: 100%;" Name="Alamat" />
+                                    <RadzenRequiredValidator Component="Alamat" Text="Alamat tidak boleh kosong !" Popup=false Style="position:relative" />
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="Telepon" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="model.Telepon" style="width: 100%;" Name="Telepon" />
+                                    <RadzenRequiredValidator Component="Telepon" Text="Telepon tidak boleh kosong !" Popup=false Style="position:relative" />
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="Jenis Kelamin" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenDropDown style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-4">
+                                    <Radzen.Blazor.RadzenLabel Text="Email" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="model.Email" style="width: 100%;" Name="Email" />
+                                    <RadzenRequiredValidator Component="Email" Text="Is required" Popup=false Style="position:relative" />
+                                    <RadzenEmailValidator Component="Email" Text="Enter Email" Popup=false Style="position:relative" />
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                                </div>
+                            </div>
+                        </Radzen.Blazor.RadzenCard>
+                    </Radzen.Blazor.RadzenFieldset>
+                </RadzenTemplateForm>
+            <a href="Identity/Account/Login">Sudah punya account? silahkan untuk melakukan Log in</a>
+            </section>
+        </div>
+    </div>
+    <div class="container-fluid">
+        
+    </div>
+}
+
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Client model;
+
+    protected override Task OnInitializedAsync()
+    {
+        if (Id <= 0)
+        {
+            model = new Client();
+        }
+        else
+        {
+            model = dbcontext.Clients.SingleOrDefault(x => x.Id == Id);
+        }
+        return base.OnInitializedAsync();
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        // console.
+    }
+
+    async Task Submit(Client model)
+    {
+        var trans = await dbcontext.Database.BeginTransactionAsync();
+        try
+        {
+            if (model.Id <= 0)
+            {
+                //create user
+                var user = new IdentityUser(model.Email) { Email = model.Email, UserName = model.Email, EmailConfirmed = true };
+                var createresult = await usermanager.CreateAsync(user, "@Client123");
+
+                if (createresult.Succeeded)
+                {
+                    await usermanager.AddToRoleAsync(user, "Client");
+                }
+
+                model.UserId = user.Id;
+                dbcontext.Clients.Add(model);
+                await dbcontext.SaveChangesAsync();
+                await trans.CommitAsync();
+            }
+            else
+            {
+                dbcontext.SaveChanges();
+                await trans.CommitAsync();
+            }
+            //NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
+            nav.NavigateTo("Identity/Account/Login");
+        }
+        catch (Exception ex)
+        {
+            await trans.RollbackAsync();
+            //NotificationService.Notify(new NotificationMessage { Detail = ex.Message, Severity = NotificationSeverity.Error, Duration = 2500 });
+        }
+
+    }
+
+    void Cancel()
+    {
+        nav.NavigateTo("Identity/Account/Login");
+    }
+}
+
