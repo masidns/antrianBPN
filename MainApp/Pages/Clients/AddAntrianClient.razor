@@ -26,7 +26,7 @@ else
                 <RadzenTemplateForm Data="@antrian" Submit="@(async (Antrian args)=>{await Submit(args);})">
                     <div class="row m-1">
                         <div class="col-md-4">
-                            <RadzenLabel Text="Client" />
+                            <RadzenLabel Text="Pemohon" />
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value="antrian.Client.Nama" Disabled=true Style="width:100%"  />
