@@ -20,7 +20,9 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
+                            <RadzenDataGridColumn TItem="Antrian" Title="NIK" Property="Client.Nik" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Pemohon" Property="Client.Nama" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Email" Property="Client.Email" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Status">
@@ -28,7 +30,7 @@
                                     @(item.Status == true ? "Antrian Selesai" : "Dalam Antrian")
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama" />
+                            @*<RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama" />*@
                         </Columns>
                     </RadzenDataGrid>
                 </div>

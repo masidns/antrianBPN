@@ -22,7 +22,9 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Pemohon" Property="Client.Nama"/>
+                            <RadzenDataGridColumn TItem="Antrian" Title="NIK" Property="Client.Nik" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Pemohon" Property="Client.Nama" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="Email" Property="Client.Email" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian"/>
                             <RadzenDataGridColumn TItem="Antrian" Title="Status">
@@ -31,7 +33,7 @@
                                 </Template>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="Antrian" Title="Petugas" Property="Petugas.Nama"/>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Action">
+                            @*<RadzenDataGridColumn TItem="Antrian" Title="Action">
                                 <Template Context="item">
                                     @if(item.Status != true)
                                     {
@@ -39,7 +41,7 @@
                                         <RadzenButton Click="@(()=>delete(item))" ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" />
                                     }
                                 </Template>
-                            </RadzenDataGridColumn>
+                            </RadzenDataGridColumn>*@
                         </Columns>
                     </RadzenDataGrid> 
                 </div>
