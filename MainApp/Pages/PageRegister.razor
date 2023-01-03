@@ -1,4 +1,4 @@
-﻿@page "/register"
+﻿@page "/register/0"
 @layout RegisterLayout
 
 @using Radzen
@@ -29,80 +29,72 @@ else
 {
     <div class="row" style="text-align:center;">
         <div style="width:100%; height:100vh; display:flex;justify-content:center;align-items:center">
-            <section style="width:50%; background-image: linear-gradient(180deg, #406882 0%, #1A374D ); border-radius:20px;padding:30px">
-                @*<RadzenTemplateForm style="background-color: transparent;" Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})">*@
-                <RadzenTemplateForm class="transparent-bg" Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})">
-                    <Radzen.Blazor.RadzenFieldset Text="Register Client">
-                        <Radzen.Blazor.RadzenCard>
+            <section style="width:; background-image: linear-gradient(180deg, #406882 0%, #1A374D ); border-radius:20px;padding:30px">
+                <RadzenTemplateForm Data="@model" InvalidSubmit="@OnInvalidSubmit" Submit="@(async (Client args) => {await Submit (args);})" >
+                    <Radzen.Blazor.RadzenFieldset Text="Register Client" Style="width:100%;">
                             <div class="row m-1">
-                                <div class="col-md-4">
+                                @*<div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="NIK" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="model.Nik" style="width: 100%;" Name="Nik" />
+                                </div>*@
+                                    <RadzenTextBox Placeholder="Nik" @bind-Value="model.Nik" style="width: 100%;" Name="Nik" />
                                     <RadzenRequiredValidator Component="Nik" Text="NIK tidak boleh kosong" Popup=false Style="position:relative" />
-                                </div>
                             </div>
                             <div class="row m-1">
-                                <div class="col-md-4">
+                               @* <div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="Nama" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
+                                </div>*@
+                                    <RadzenTextBox Placeholder="Nama" @bind-Value="model.Nama" style="width: 100%;" Name="Nama" />
                                     <RadzenRequiredValidator Component="Nama" Text="Nama tidak boleh kosong !" Popup=false Style="position:relative" />
-                                </div>
                             </div>
                             <div class="row m-1">
-                                <div class="col-md-4">
+                                @*<div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="Alamat" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="model.Alamat" style="width: 100%;" Name="Alamat" />
+                                </div>*@
+                                    <RadzenTextBox Placeholder="Alamat" @bind-Value="model.Alamat" style="width: 100%;" Name="Alamat" />
                                     <RadzenRequiredValidator Component="Alamat" Text="Alamat tidak boleh kosong !" Popup=false Style="position:relative" />
-                                </div>
                             </div>
                             <div class="row m-1">
-                                <div class="col-md-4">
+                              @*  <div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="Telepon" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="model.Telepon" style="width: 100%;" Name="Telepon" />
+                                </div>*@
+                                    <RadzenTextBox Placeholder="No Telepon" @bind-Value="model.Telepon" style="width: 100%;" Name="Telepon" />
                                     <RadzenRequiredValidator Component="Telepon" Text="Telepon tidak boleh kosong !" Popup=false Style="position:relative" />
-                                </div>
                             </div>
                             <div class="row m-1">
-                                <div class="col-md-4">
+                               @* <div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="Jenis Kelamin" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenDropDown style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />
-                                </div>
+                                </div>*@
+                                    <RadzenDropDown Placeholder="Jenis Kelamin" style="width: 100%;" @bind-Value="model.JenisKelamin" TValue="Gender" Data="@(Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList())" />
                             </div>
                             <div class="row m-1">
-                                <div class="col-md-4">
+                               @* <div class="col-md-4">
                                     <Radzen.Blazor.RadzenLabel Text="Email" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="model.Email" style="width: 100%;" Name="Email" />
+                                </div>*@
+                                    <RadzenTextBox Placeholder="Email" @bind-Value="model.Email" style="width: 100%;" Name="Email" />
                                     <RadzenRequiredValidator Component="Email" Text="Is required" Popup=false Style="position:relative" />
                                     <RadzenEmailValidator Component="Email" Text="Enter Email" Popup=false Style="position:relative" />
-                                </div>
+                            </div>      
+                            <div class="row m-1">
+                            @*<RadzenTextBox Placeholder="Password" @bind-Value="model.Password" style="width: 100%;" Name="Password" Type="password" />*@
+                            @*<RadzenTextBox Placeholder="Confirm Password" @bind-Value="model.ConfirmPassword" style="width: 100%;" Name="ConfirmPassword" Type="password" />*@
+                            @*<RadzenCompareValidator ControlToCompare="Password" ControlToValidate="ConfirmPassword" ErrorText="Password dan konfirmasi password tidak cocok" Style="position:relative" />*@
+
                             </div>
+
                             <div class="row justify-content-center">
-                                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
-                                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                                <div class="col d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                                    <button  type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                                </div>
+                            </div> 
+                            <div class="row mt-3 justify-content-center">
+                                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: ;">
+                                <a href="Identity/Account/Login">Sudah punya account? silahkan untuk melakukan Log in</a>
                                 </div>
                             </div>
-                        </Radzen.Blazor.RadzenCard>
                     </Radzen.Blazor.RadzenFieldset>
                 </RadzenTemplateForm>
-            <a href="Identity/Account/Login">Sudah punya account? silahkan untuk melakukan Log in</a>
             </section>
         </div>
-    </div>
-    <div class="container-fluid">
-        
     </div>
 }
 
@@ -154,12 +146,6 @@ else
                 await dbcontext.SaveChangesAsync();
                 await trans.CommitAsync();
             }
-            else
-            {
-                dbcontext.SaveChanges();
-                await trans.CommitAsync();
-            }
-            //NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
             nav.NavigateTo("Identity/Account/Login");
         }
         catch (Exception ex)

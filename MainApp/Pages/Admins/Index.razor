@@ -20,6 +20,17 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
+                            @*<RadzenDataGridColumn TItem="Antrian" Title="No.">
+                                <Template Context="item">
+                                    @for (int i = 1; i <= data.Count(x => x.TanggalAntrian > DateTime.Today && x.Layanan == layanan); i++)
+                                    {
+                                        <text>
+                                        @i
+                                        </text>
+                                    }
+                                </Template>
+                            </RadzenDataGridColumn>*@
+
                             <RadzenDataGridColumn TItem="Antrian" Title="Client" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />
