@@ -7,6 +7,7 @@
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 @inject AuthenticationStateProvider authStateProvider
+@inject NotificationService NotificationService
 
 <PageTitle>Tambah Loket</PageTitle>
 
@@ -79,6 +80,7 @@ else{
         if (dbcontext.Layanans.Any(x => x.Nama.ToLower() == model.Nama.ToLower()))
         {
             errorMessage = "Layanan sudah ada dalam database. Silakan masukkan nama layanan yang lain.";
+            NotificationService.Notify(new NotificationMessage { Detail = "Gagal menyimpan! Silakan masukkan nama layanan yang lain.", Severity = NotificationSeverity.Error, Duration = 2500 });
             return;
         }else
         {
@@ -94,6 +96,7 @@ else{
                 dbcontext.SaveChanges();
                 await trans.CommitAsync();
             }
+            NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
             nav.NavigateTo("/admin/loket");
         }
         

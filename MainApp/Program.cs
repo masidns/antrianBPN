@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +26,21 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
+
 var app = builder.Build();
 
 
 
 using (var scope = app.Services.CreateScope())
 {
+
     var dbContext =scope.ServiceProvider.GetService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
     var usermanager=scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
     if (!dbContext.Roles.Any())
     {

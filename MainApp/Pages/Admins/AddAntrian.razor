@@ -141,6 +141,8 @@ else
         var trans = await dbcontext.Database.BeginTransactionAsync();
         if(model.Id <= 0)
         {
+            var data = dbcontext.Antrians.Where(x => x.TanggalAntrian > DateTime.Today && x.Layanan == model.Layanan);
+            model.Nomor = data.Count()+1;
             dbcontext.Antrians.Add(model);
             await dbcontext.SaveChangesAsync();
             await trans.CommitAsync();

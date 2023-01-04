@@ -22,6 +22,7 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data.Where(x => x.Layanan == layanan)" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
+                            <RadzenDataGridColumn TItem="Antrian" Title="Nomor" Property="Antrians.Nomor" />
                             <RadzenDataGridColumn TItem="Antrian" Title="NIK" Property="Client.Nik" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Pemohon" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Email" Property="Client.Email" />
@@ -74,6 +75,14 @@
         .Include(x=>x.Petugas)
         .OrderBy(x => x.TanggalAntrian)
         .ToList();
+
+        //var nomor = 1;
+        //foreach (var item in datasource)
+        //{
+        //    item.Nomor = nomor;
+        //    nomor++;
+        //}
+
         data = datasource;
         await base.OnInitializedAsync();
     }

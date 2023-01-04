@@ -1,4 +1,6 @@
-﻿namespace MainApp.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MainApp.Models
 {
     public class Antrian
     {
@@ -8,5 +10,8 @@
         public Client Client { get; set; }
         public Layanan Layanan { get; set; }
         public Petugas? Petugas { get; set; }
+        
+        //[NotMapped]
+        public int Nomor { get; set; }
     }
 }
