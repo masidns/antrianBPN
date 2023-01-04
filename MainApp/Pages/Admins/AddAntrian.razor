@@ -5,6 +5,8 @@
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
+@inject NotificationService NotificationService
+
 
 <PageTitle>Tambah Antrian</PageTitle>
 
@@ -152,8 +154,8 @@ else
             dbcontext.SaveChanges();
             await trans.CommitAsync();
         }
+        NotificationService.Notify(new NotificationMessage { Detail = "Data Berhasil Disimpan!", Severity = NotificationSeverity.Success, Duration = 2500 });
         nav.NavigateTo("admin/antrian");
-
     }
 
     void Cancel()

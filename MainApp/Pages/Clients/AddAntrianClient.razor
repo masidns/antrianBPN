@@ -10,6 +10,7 @@
 @inject NavigationManager nav
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<IdentityUser> userManager
+@inject NotificationService NotificationService
 
 
 <PageTitle>Tambah Antrian</PageTitle>
@@ -107,6 +108,7 @@ else
             dbcontext.SaveChanges();
             await trans.CommitAsync();
         }
+        NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
         nav.NavigateTo("client/antrian");
 
     }

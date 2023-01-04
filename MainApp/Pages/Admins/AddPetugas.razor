@@ -7,6 +7,8 @@
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
 @inject UserManager<IdentityUser> userManager
+@inject NotificationService NotificationService
+
 
 <PageTitle>Tambah Petugas</PageTitle>
 
@@ -143,6 +145,7 @@ else
                 dbcontext.SaveChanges();
                 await trans.CommitAsync();
             }
+            NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
             nav.NavigateTo("admin/petugas");
        }  catch (Exception ex)  {
 

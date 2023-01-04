@@ -21,7 +21,7 @@
                 <div class="col">
                     <RadzenDataGrid @ref="grid" Data="@data" TItem="Antrian" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" AllowPaging="true" AllowSorting="true">
                         <Columns>
-                            <RadzenDataGridColumn TItem="Antrian" Title="Nomor" Property="Nomor" />
+                            <RadzenDataGridColumn TItem="Antrian" Title="No. Antrian" Property="Nomor" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Pemohon" Property="Client.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Layanan" Property="Layanan.Nama" />
                             <RadzenDataGridColumn TItem="Antrian" Title="Tanggal" Property="TanggalAntrian" />

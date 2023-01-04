@@ -11,7 +11,7 @@
 @inject UserManager<IdentityUser> usermanager
 @inject ApplicationDbContext dbcontext
 @inject NavigationManager nav
-@*@inject NotificationService NotificationService*@
+@inject NotificationService NotificationService
 
 <PageTitle>Tambah Client</PageTitle>
 
@@ -143,13 +143,13 @@ else
                 dbcontext.SaveChanges();
                 await trans.CommitAsync();
             }
-            //NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
+            NotificationService.Notify(new NotificationMessage { Detail = "Berhasil !", Severity = NotificationSeverity.Success, Duration = 2500 });
             nav.NavigateTo("admin/client");
         }
         catch(Exception ex)
         {
+            NotificationService.Notify(new NotificationMessage { Detail = ex.Message, Severity = NotificationSeverity.Error, Duration = 2500 });
             await trans.RollbackAsync();
-            //NotificationService.Notify(new NotificationMessage { Detail = ex.Message, Severity = NotificationSeverity.Error, Duration = 2500 });
         }
         
     }
